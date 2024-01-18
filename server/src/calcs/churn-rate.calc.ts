@@ -1,9 +1,46 @@
-import { Subscription } from 'rxjs';
-import { Month } from 'src/models/month.model';
+import { Subscription } from 'src/models/subscription.model';
 
-export const getChurnRate = (
+export const getYearlyChurnRate = (subscriptions: Subscription[]): any => {
+  console.log(subscriptions);
+};
+
+export const getMonthlyChurnRate = (
   subscriptions: Subscription[],
-  month: Month = 'jan',
+  monthIndex: number,
+  year: number,
 ): any => {
-  console.log(subscriptions, month);
+  subscriptions.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+  const monthSubscriptions = subscriptions.filter((s) => {
+    console.log(s.startDate.getMonth());
+    if (
+      s.startDate.getMonth() <= monthIndex &&
+      s.startDate.getFullYear() <= year &&
+      // s.nextCycle === null) ||
+      s.nextCycle.getMonth() > monthIndex &&
+      s.nextCycle.getFullYear() > year
+    )
+      return true;
+    return false;
+  });
+
+  console.log(monthSubscriptions);
+
+  const monthLostSubscriptions = monthSubscriptions.filter(
+    (s) => s.status === 'Canceled',
+  );
+
+  const newCustomers = monthSubscriptions.filter(
+    (s) =>
+      s.startDate.getMonth() === monthIndex &&
+      s.startDate.getFullYear() === 2022,
+  );
+
+  console.log('month number: ', monthIndex + 1);
+  console.log('monthLostSubscriptions: ', monthLostSubscriptions.length);
+  console.log('monthSubscriptions: ', monthSubscriptions.length);
+  console.log('newCustomers: ', newCustomers.length);
+  console.log(
+    'churn: ',
+    (monthLostSubscriptions.length / monthSubscriptions.length) * 100,
+  );
 };

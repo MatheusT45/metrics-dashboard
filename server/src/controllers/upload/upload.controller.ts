@@ -9,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { getMonthlyChurnRate } from 'src/calcs/churn-rate.calc';
 import { csvJSON } from 'src/helpers/json.helper';
 import { subscriptionMapper } from 'src/mappers/subscription.mapper';
 
@@ -43,9 +44,13 @@ export class UploadController {
     }
 
     if (file.mimetype === 'text/csv') {
+      const fileContent = subscriptionMapper(csvJSON(file.buffer.toString()));
+
+      getMonthlyChurnRate(fileContent, 0, 2023);
+
       return {
         options,
-        fileContent: subscriptionMapper(csvJSON(file.buffer.toString())),
+        fileContent,
       };
     }
   }
