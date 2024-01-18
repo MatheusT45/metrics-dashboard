@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { csvJSON } from 'src/helpers/json.helper';
+import { subscriptionMapper } from 'src/mappers/subscription.mapper';
 
 const validators = new ParseFilePipe({
   validators: [
@@ -44,7 +45,7 @@ export class UploadController {
     if (file.mimetype === 'text/csv') {
       return {
         options,
-        fileContent: csvJSON(file.buffer.toString()),
+        fileContent: subscriptionMapper(csvJSON(file.buffer.toString())),
       };
     }
   }
