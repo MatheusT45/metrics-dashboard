@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Month } from 'src/models/subscription.model';
+import { Month } from 'src/models/month.model';
 
 export const getChurnRate = (
   subscriptions: Subscription[],

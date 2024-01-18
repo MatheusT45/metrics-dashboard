@@ -1,5 +1,5 @@
+import { SheetHeaders } from 'src/models/sheet.model';
 import {
-  SheetHeaders,
   Subscription,
   SubscriptionStatus,
 } from 'src/models/subscription.model';
