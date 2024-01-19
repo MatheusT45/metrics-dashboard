@@ -6,23 +6,23 @@ import {
 } from './common/common';
 import {
   ChurnRateResponse,
-  RecursiveRevenueResponse,
+  RecurringRevenueResponse,
 } from 'src/models/responses.model';
 
-export const getYearlyRecursiveRevenue = (
+export const getYearlyRecurringRevenue = (
   subscriptions: Subscription[],
 ): ChurnRateResponse[] => {
   return callMonthlyCalculationsPerYear(
     subscriptions,
-    getMonthlyRecursiveRevenue,
+    getMonthlyRecurringRevenue,
   );
 };
 
-export const getMonthlyRecursiveRevenue = (
+export const getMonthlyRecurringRevenue = (
   subscriptions: Subscription[],
   monthIndex: number,
   year: number,
-): RecursiveRevenueResponse => {
+): RecurringRevenueResponse => {
   const monthSubscriptions = sortSubscriptionsByMonth(
     subscriptions,
     monthIndex,

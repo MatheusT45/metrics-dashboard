@@ -6,7 +6,7 @@ export type ChurnRateResponse = {
   churn: number;
 };
 
-export type RecursiveRevenueResponse = {
+export type RecurringRevenueResponse = {
   relatesTo: string;
   monthlyRevenue: number;
 };

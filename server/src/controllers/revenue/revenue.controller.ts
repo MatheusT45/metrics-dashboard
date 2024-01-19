@@ -10,12 +10,12 @@ import { loadFile } from 'src/helpers/file.helper';
 import { subscriptionMapper } from 'src/mappers/subscription.mapper';
 import { fileValidators } from '../app.controller';
 import {
-  getMonthlyRecursiveRevenue,
-  getYearlyRecursiveRevenue,
+  getMonthlyRecurringRevenue,
+  getYearlyRecurringRevenue,
 } from 'src/calcs/revenue';
 import { BodyOptions, Options } from 'src/models/file-upload-options.model';
 
-@Controller('monthly-recursive-revenue')
+@Controller('recurring-revenue')
 export class RevenueController {
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
@@ -27,13 +27,13 @@ export class RevenueController {
     const fileContent = subscriptionMapper(loadFile(file));
 
     if (options.month && options.year) {
-      return getMonthlyRecursiveRevenue(
+      return getMonthlyRecurringRevenue(
         fileContent,
         options.month - 1,
         options.year,
       );
     }
 
-    return getYearlyRecursiveRevenue(fileContent);
+    return getYearlyRecurringRevenue(fileContent);
   }
 }
