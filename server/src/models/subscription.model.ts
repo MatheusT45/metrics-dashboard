@@ -6,6 +6,7 @@ export type SubscriptionStatus =
   | 'Upgrade';
 
 export type Subscription = {
+  index?: number;
   chargeAmount: number;
   chargeFrequencyInDaysField: number;
   startDate: Date;
@@ -13,6 +14,6 @@ export type Subscription = {
   statusDate: Date;
   cancellationDate?: Date;
   valueCharged: number;
-  nextCycle: Date;
+  nextCycle?: Date;
   userId: number;
 };
