@@ -8,5 +8,5 @@ export type ChurnRateResponse = {
 
 export type RecursiveRevenueResponse = {
   relatesTo: string;
-  monthlyRevenue: string;
+  monthlyRevenue: number;
 };

@@ -48,6 +48,6 @@ export const getMonthlyRecursiveRevenue = (
 
   return {
     relatesTo: `${toDoubleDigits(monthIndex + 1)}-${year}`,
-    monthlyRevenue: monthlyRevenue.toFixed(2),
+    monthlyRevenue: parseFloat(monthlyRevenue.toFixed(2)),
   };
 };
