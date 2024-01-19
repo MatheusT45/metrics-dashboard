@@ -1,1 +1,5 @@
-# subscribers-chart
+# metrics-dashboard
+
+```
+docker compose up
+```
