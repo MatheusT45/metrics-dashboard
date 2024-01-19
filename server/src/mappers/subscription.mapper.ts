@@ -21,19 +21,49 @@ const statusMapper = (status: string): SubscriptionStatus => {
   }
 };
 
+// Some dates are being registered in the
+// wrong format, so this function fixes
+// the ones that can be detected e.g.: 30/06/2023
+const fixInvalidDates = (
+  jsonSheet: SheetHeaders[],
+  subscriptions: Subscription[],
+): Subscription[] => {
+  subscriptions.map((s) => {
+    s.nextCycle.getTime();
+
+    if (isNaN(s.nextCycle.getTime())) {
+      const nextCycleDate = jsonSheet[s.index].próximo_ciclo.split('/');
+      const fixedNextCycleDate = new Date(
+        `${nextCycleDate[1]}/${nextCycleDate[0]}/${nextCycleDate[2]}`,
+      );
+      s.nextCycle = fixedNextCycleDate;
+      return s;
+    }
+  });
+  return subscriptions;
+};
+
 export const subscriptionMapper = (
   jsonSheet: SheetHeaders[],
 ): Subscription[] => {
-  const subscriptions: Subscription[] = jsonSheet.map((headerField) => ({
-    chargeAmount: parseInt(headerField.quantidade_cobranças),
-    chargeFrequencyInDaysField: parseInt(headerField.cobrada_a_cada_X_dias),
-    startDate: new Date(headerField.data_início),
-    status: statusMapper(headerField.status),
-    statusDate: new Date(headerField.data_status),
-    cancellationDate: new Date(headerField.data_cancelamento),
-    valueCharged: parseFloat(headerField.valor.replace(',', '.')),
-    nextCycle: new Date(headerField.próximo_ciclo),
-    userId: parseInt(headerField.ID_assinante.replace('user_', '')),
-  }));
-  return subscriptions;
+  const subscriptions: Subscription[] = jsonSheet.map((headerField, i) => {
+    return {
+      index: i,
+      chargeAmount: parseInt(headerField.quantidade_cobranças),
+      chargeFrequencyInDaysField: parseInt(headerField.cobrada_a_cada_X_dias),
+      startDate: new Date(headerField.data_início),
+      status: statusMapper(headerField.status),
+      statusDate: new Date(headerField.data_status),
+      cancellationDate: headerField.data_cancelamento
+        ? new Date(headerField.data_cancelamento)
+        : null,
+      valueCharged: parseFloat(headerField.valor.replace(',', '.')),
+      nextCycle: headerField.próximo_ciclo
+        ? new Date(headerField.próximo_ciclo)
+        : null,
+      userId: parseInt(headerField.ID_assinante.replace('user_', '')),
+    };
+  });
+
+  return fixInvalidDates(jsonSheet, subscriptions);
 };
