@@ -51,14 +51,16 @@ export const getMonthlyChurnRate = (
 
   const lostSubscriptions = monthSubscriptions.filter(
     (s) =>
-      s.status === 'Canceled' &&
+      (s.status === 'Canceled' || s.status === 'Trial Canceled') &&
       s.cancellationDate.getMonth() === monthIndex &&
       s.cancellationDate.getFullYear() === year,
   );
 
   const newSubscriptions = monthSubscriptions.filter(
     (s) =>
-      s.status === 'Active' && // Check only for active new customers
+      (s.status === 'Active' || // Check only for active new customers
+        s.status === 'Upgrade' ||
+        s.status === 'Late') &&
       s.startDate.getMonth() === monthIndex &&
       s.startDate.getFullYear() === year,
   );
