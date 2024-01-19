@@ -12,7 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import {
   // getMonthlyChurnRate,
   getYearlyChurnRate,
-} from 'src/calcs/churn-rate.calc';
+} from 'src/calcs/churn-rate';
 import { csvJSON } from 'src/helpers/json.helper';
 import { subscriptionMapper } from 'src/mappers/subscription.mapper';
 
