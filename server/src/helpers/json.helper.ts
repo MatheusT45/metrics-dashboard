@@ -1,5 +1,6 @@
-//var csv is the CSV file with headers
-export function csvJSON(csv: string): any {
+import { SheetHeaders } from 'src/models/sheet.model';
+
+export function csvJSON(csv: string): SheetHeaders[] {
   const lines = csv.split('\n');
 
   const result = [];
