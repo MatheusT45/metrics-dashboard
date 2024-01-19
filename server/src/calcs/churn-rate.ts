@@ -1,34 +1,15 @@
-import {
-  AnualChurnRateResponse,
-  ChurnRateResponse,
-} from 'src/models/responses.model';
+import { toDoubleDigits } from 'src/helpers/numbers.helper';
+import { ChurnRateResponse } from 'src/models/responses.model';
 import { Subscription } from 'src/models/subscription.model';
+import {
+  callMonthlyCalculationsPerYear,
+  sortSubscriptionsByMonth,
+} from './common/common';
 
 export const getYearlyChurnRate = (
   subscriptions: Subscription[],
-): AnualChurnRateResponse[] => {
-  subscriptions.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
-
-  const firstYear = subscriptions[0].startDate.getFullYear();
-  const lastYear =
-    subscriptions[subscriptions.length - 1].startDate.getFullYear();
-  const years = [];
-
-  for (let i = firstYear; i <= lastYear; i++) {
-    years.push(i);
-  }
-
-  const results = [];
-  years.forEach((year) => {
-    for (let i = 0; i < 12; i++) {
-      results.push({
-        relatesTo: `${i + 1}-${year}`,
-        data: getMonthlyChurnRate(subscriptions, i, year),
-      });
-    }
-  });
-
-  return results;
+): ChurnRateResponse[] => {
+  return callMonthlyCalculationsPerYear(subscriptions, getMonthlyChurnRate);
 };
 
 export const getMonthlyChurnRate = (
@@ -36,18 +17,11 @@ export const getMonthlyChurnRate = (
   monthIndex: number,
   year: number,
 ): ChurnRateResponse => {
-  subscriptions.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
-  const monthSubscriptions = subscriptions.filter((s) => {
-    return (
-      (s.startDate.getMonth() <= monthIndex &&
-        s.startDate.getFullYear() <= year &&
-        s.nextCycle === null) ||
-      (s.startDate.getMonth() <= monthIndex &&
-        s.startDate.getFullYear() <= year &&
-        s.nextCycle.getMonth() >= monthIndex &&
-        s.nextCycle.getFullYear() >= year)
-    );
-  });
+  const monthSubscriptions = sortSubscriptionsByMonth(
+    subscriptions,
+    monthIndex,
+    year,
+  );
 
   const lostSubscriptions = monthSubscriptions.filter(
     (s) =>
@@ -66,7 +40,7 @@ export const getMonthlyChurnRate = (
   );
 
   return {
-    relatesTo: `${monthIndex + 1}-${year}`,
+    relatesTo: `${toDoubleDigits(monthIndex + 1)}-${year}`,
     lostSubscriptions: lostSubscriptions.length,
     subscriptions: monthSubscriptions.length,
     newSubscriptions: newSubscriptions.length,
