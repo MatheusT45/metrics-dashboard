@@ -9,7 +9,7 @@ services:
     container_name: server
     restart: always
     build: ./server
-    command: sh -c "npm run start"
+    command: sh -c "npm run start:dev"
     ports:
       - '3000:3000'
     volumes:
