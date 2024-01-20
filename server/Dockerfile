@@ -21,4 +21,4 @@ RUN npm install && npm cache clean --force
 COPY --chown=node:node . .
 
 # Starting our application
-CMD [ "npm", "run", "start:dev"]
+CMD [ "npm", "run", "start"]
