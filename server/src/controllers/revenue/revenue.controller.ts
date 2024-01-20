@@ -13,7 +13,7 @@ import {
   getMonthlyRecurringRevenue,
   getYearlyRecurringRevenue,
 } from 'src/calcs/revenue';
-import { BodyOptions, Options } from 'src/models/file-upload-options.model';
+import { BodyOptions, Options } from 'src/models/metric-options.model';
 
 @Controller('recurring-revenue')
 export class RevenueController {
@@ -34,6 +34,10 @@ export class RevenueController {
       );
     }
 
-    return getYearlyRecurringRevenue(fileContent);
+    return getYearlyRecurringRevenue(
+      fileContent,
+      options.year,
+      options.filterSubscriptionPlan,
+    );
   }
 }

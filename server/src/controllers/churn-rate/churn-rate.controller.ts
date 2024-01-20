@@ -10,7 +10,7 @@ import { getMonthlyChurnRate, getYearlyChurnRate } from 'src/calcs/churn-rate';
 import { loadFile } from 'src/helpers/file.helper';
 import { subscriptionMapper } from 'src/mappers/subscription.mapper';
 import { fileValidators } from '../app.controller';
-import { BodyOptions, Options } from 'src/models/file-upload-options.model';
+import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { ChurnRateResponse } from 'src/models/responses.model';
 
 @Controller('churn-rate')
@@ -27,6 +27,10 @@ export class ChurnRateController {
     if (options.month && options.year) {
       return getMonthlyChurnRate(fileContent, options.month - 1, options.year);
     }
-    return getYearlyChurnRate(fileContent);
+    return getYearlyChurnRate(
+      fileContent,
+      options.year,
+      options.filterSubscriptionPlan,
+    );
   }
 }

@@ -5,11 +5,19 @@ import {
   callMonthlyCalculationsPerYear,
   sortSubscriptionsByMonth,
 } from './common/common';
+import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 
 export const getYearlyChurnRate = (
   subscriptions: Subscription[],
+  year?: number,
+  filterSubscriptionPlan?: SubscriptionPlanFilter,
 ): ChurnRateResponse[] => {
-  return callMonthlyCalculationsPerYear(subscriptions, getMonthlyChurnRate);
+  return callMonthlyCalculationsPerYear(
+    subscriptions,
+    year,
+    filterSubscriptionPlan,
+    getMonthlyChurnRate,
+  );
 };
 
 export const getMonthlyChurnRate = (

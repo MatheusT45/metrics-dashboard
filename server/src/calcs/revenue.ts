@@ -8,12 +8,17 @@ import {
   ChurnRateResponse,
   RecurringRevenueResponse,
 } from 'src/models/responses.model';
+import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 
 export const getYearlyRecurringRevenue = (
   subscriptions: Subscription[],
+  year?: number,
+  filterSubscriptionPlan?: SubscriptionPlanFilter,
 ): ChurnRateResponse[] => {
   return callMonthlyCalculationsPerYear(
     subscriptions,
+    year,
+    filterSubscriptionPlan,
     getMonthlyRecurringRevenue,
   );
 };
