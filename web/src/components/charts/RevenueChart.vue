@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import BarChart from '../charts/BarChart.vue'
+import BarChart from './common/BarChart.vue'
 
 const props = defineProps(['recurringRevenueData'])
 const recurringRevenueData = ref(props.recurringRevenueData)

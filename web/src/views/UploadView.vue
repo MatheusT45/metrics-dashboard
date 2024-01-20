@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import UploadCard from '../components/UploadCard.vue'
 import { getChurnRate, getRecurringRevenue } from '../services/metrics.service'
-import ChurnGraphic from '../components/metric-graphics/ChurnGraphic.vue'
-import RevenueGraphic from '../components/metric-graphics/RevenueGraphic.vue'
+import ChurnChart from '../components/charts/ChurnChart.vue'
+import RevenueChart from '../components/charts/RevenueChart.vue'
 
 const churnRateData = ref([])
 const recurringRevenueData = ref([])
@@ -37,9 +37,9 @@ const onUpload = async (e: any): Promise<void> => {
     <h1 v-if="hasUploadedFile">Graphs</h1>
     <div v-if="hasUploadedFile">
       <h2>Churn Rate</h2>
-      <ChurnGraphic :churnRateData="churnRateData" />
+      <ChurnChart :churnRateData="churnRateData" />
       <h2>Recurring Revenue</h2>
-      <RevenueGraphic :recurringRevenueData="recurringRevenueData" />
+      <RevenueChart :recurringRevenueData="recurringRevenueData" />
     </div>
   </main>
 </template>
