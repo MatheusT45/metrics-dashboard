@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite  --host=0.0.0.0",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "dev": "vite  --host=0.0.0.0 --mode development",
+    "build": "run-p type-check \"build-only --mode production {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "chart.js": "^4.4.1",
+    "dotenv": "^16.3.2",
     "vue": "^3.3.11",
     "vue-chartjs": "^5.3.0",
     "vue-router": "^4.2.5"

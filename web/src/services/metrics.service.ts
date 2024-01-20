@@ -1,4 +1,4 @@
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_METRICS_API_URL
 
 export const getChurnRate = async (file: File) => {
   const formData = new FormData()
