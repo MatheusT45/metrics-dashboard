@@ -1,12 +1,12 @@
 import { SheetHeaders } from 'src/models/sheet.model';
-import { csvJSON } from './json.helper';
+import { csvJSON, xlsxJSON } from './json.helper';
 
 export const loadFile = (file: Express.Multer.File): SheetHeaders[] => {
   if (
     file.mimetype ===
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   ) {
-    return [];
+    return xlsxJSON(file.buffer);
   }
 
   if (file.mimetype === 'text/csv') {
