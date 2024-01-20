@@ -3,7 +3,7 @@ export type ChurnRateResponse = {
   lostSubscriptions: number;
   subscriptions: number;
   newSubscriptions: number;
-  churn: number;
+  churnRate: number;
 };
 
 export type RecurringRevenueResponse = {

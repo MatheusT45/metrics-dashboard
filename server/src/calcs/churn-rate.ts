@@ -56,6 +56,8 @@ export const getMonthlyChurnRate = (
     lostSubscriptions: lostSubscriptions.length,
     subscriptions: monthSubscriptions.length,
     newSubscriptions: newSubscriptions.length,
-    churn: (lostSubscriptions.length / monthSubscriptions.length) * 100,
+    churnRate: Math.round(
+      (lostSubscriptions.length / monthSubscriptions.length) * 100,
+    ),
   };
 };
