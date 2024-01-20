@@ -1,39 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js'
+import BarChart from '../charts/BarChart.vue'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const props = defineProps(['churnRateData'])
 const churnRateData = ref(props.churnRateData)
 
-const chartData = ref({
-  labels: [''],
-  datasets: [
-    {
-      label: '',
-      data: [0],
-      backgroundColor: '',
-      borderColor: ''
-    }
-  ]
-})
-const chartOptions = {
-  responsive: true,
-  backgroundColor: '#333333',
-  borderColor: '#999999',
-  color: '#ffffff'
-}
-
-chartData.value = {
+const chartData = {
   labels: churnRateData.value.map((item: any) => item.relatesTo),
   datasets: [
     {
@@ -65,7 +37,7 @@ chartData.value = {
 </script>
 
 <template>
-  <div class="charts"><Bar id="my-chart-id" :options="chartOptions" :data="chartData" /></div>
+  <BarChart :data="chartData" />
 </template>
 
 <style scoped></style>

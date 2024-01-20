@@ -25,8 +25,8 @@ const onUpload = async (e: any): Promise<void> => {
     return
   }
 
-  churnRateData.value = await getChurnRate(uploadedFile)
-  recurringRevenueData.value = await getRecurringRevenue(uploadedFile)
+  churnRateData.value = await getChurnRate(uploadedFile, {})
+  recurringRevenueData.value = await getRecurringRevenue(uploadedFile, {})
   hasUploadedFile.value = true
 }
 </script>
