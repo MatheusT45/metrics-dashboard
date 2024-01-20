@@ -31,4 +31,3 @@ input[type='file'] {
   display: none;
 }
 </style>
-../services/metrics
