@@ -8,11 +8,16 @@ export const sortSubscriptionsByMonth = (
 ): Subscription[] => {
   subscriptions.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
   return subscriptions.filter((s) => {
+    const currentMonthStartDate = new Date(year, monthIndex, 1);
+    const currentMonthEndDate = new Date(year, monthIndex + 1, 0);
+
     return (
-      s.startDate.getMonth() <= monthIndex &&
-      s.startDate.getFullYear() <= year &&
-      s.nextCycle.getMonth() >= monthIndex &&
-      s.nextCycle.getFullYear() >= year
+      (s.startDate <= currentMonthStartDate &&
+        s.nextCycle >= currentMonthEndDate) ||
+      (s.startDate.getMonth() === monthIndex &&
+        s.startDate.getFullYear() === year) ||
+      (s.nextCycle.getMonth() === monthIndex &&
+        s.nextCycle.getFullYear() === year)
     );
   });
 };
