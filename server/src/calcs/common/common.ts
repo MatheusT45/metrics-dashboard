@@ -49,7 +49,7 @@ export function callMonthlyCalculationsPerYear(
   if (!year) {
     const firstYear = subscriptions[0].startDate.getFullYear();
     const lastYear =
-      subscriptions[subscriptions.length - 1].startDate.getFullYear();
+      subscriptions[subscriptions.length - 1].nextCycle.getFullYear();
     for (let i = firstYear; i <= lastYear; i++) {
       years.push(i);
     }
