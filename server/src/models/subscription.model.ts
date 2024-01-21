@@ -8,7 +8,7 @@ export type SubscriptionStatus =
 export type Subscription = {
   index?: number;
   chargeAmount: number;
-  chargeFrequencyInDaysField: number;
+  chargeFrequencyInDays: number;
   startDate: Date;
   status: SubscriptionStatus;
   statusDate: Date;

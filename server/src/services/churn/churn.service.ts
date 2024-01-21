@@ -36,7 +36,7 @@ export class ChurnService {
     // TODO: consider status date to avoid counting a customer whose status wasnt updated yet
     // monthSubscriptions.forEach((s) => {
     //   if (
-    //     s.chargeFrequencyInDaysField === 30 &&
+    //     s.chargeFrequencyInDays === 30 &&
     //     (s.status === 'Active' || s.status === 'Upgrade') &&
     //     s.statusDate.getMonth() > monthIndex &&
     //     s.statusDate.getFullYear() >= year

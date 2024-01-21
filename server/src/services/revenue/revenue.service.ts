@@ -37,14 +37,14 @@ export class RevenueService {
     let monthlyRevenue = 0;
     monthSubscriptions.map((s) => {
       if (
-        s.chargeFrequencyInDaysField === 30 &&
+        s.chargeFrequencyInDays === 30 &&
         (s.status === 'Active' || s.status === 'Upgrade') // get active and upgrade customers
       ) {
         return (monthlyRevenue += s.valueCharged);
       }
 
       if (
-        s.chargeFrequencyInDaysField === 30 &&
+        s.chargeFrequencyInDays === 30 &&
         s.status === 'Late' && // sum late customers payments and skips last one
         s.statusDate.getMonth() > monthIndex &&
         s.statusDate.getFullYear() >= year
@@ -53,7 +53,7 @@ export class RevenueService {
       }
 
       if (
-        s.chargeFrequencyInDaysField === 30 &&
+        s.chargeFrequencyInDays === 30 &&
         s.status === 'Canceled' && // sum canceled customers payments and skips last one
         s.startDate.getMonth() <= monthIndex &&
         s.startDate.getFullYear() <= year &&
@@ -64,8 +64,7 @@ export class RevenueService {
       }
 
       if (
-        (s.chargeFrequencyInDaysField === 360 ||
-          s.chargeFrequencyInDaysField === 365) && // sum yearly customers payments
+        (s.chargeFrequencyInDays === 360 || s.chargeFrequencyInDays === 365) && // sum yearly customers payments
         s.startDate.getMonth() === monthIndex &&
         s.startDate.getFullYear() === year
       ) {

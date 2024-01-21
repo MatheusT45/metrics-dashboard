@@ -27,7 +27,7 @@ export class SubscriptionMapper {
   // Some dates are being registered in the
   // wrong format, so this function fixes
   // the ones that can be detected e.g.: 30/06/2023
-  fixInvalidDates = (
+  fixInvalidNextCycleDates = (
     jsonSheet: SheetHeaders[],
     subscriptions: Subscription[],
   ): Subscription[] => {
@@ -46,12 +46,44 @@ export class SubscriptionMapper {
     return subscriptions;
   };
 
+  // Some Next Cycle Dates are registered before the actual start date
+  fixedStatusDates = (subscriptions: Subscription[]): Subscription[] => {
+    subscriptions.map((s) => {
+      const correctedStatusDate = new Date(s.startDate);
+      correctedStatusDate.setMonth(s.startDate.getMonth() + s.chargeAmount - 1);
+      if (
+        s.chargeFrequencyInDays === 30 &&
+        s.status === 'Active' &&
+        (correctedStatusDate.getMonth() != s.statusDate.getMonth() ||
+          correctedStatusDate.getFullYear() != s.statusDate.getFullYear())
+      ) {
+        return s;
+      }
+      return s;
+    });
+    return subscriptions;
+  };
+
+  // Data treatment and validations
+  treatData = (
+    jsonSheet: SheetHeaders[],
+    subscriptions: Subscription[],
+  ): Subscription[] => {
+    const fixedInvalidNextCycleDates = this.fixInvalidNextCycleDates(
+      jsonSheet,
+      subscriptions,
+    );
+    const fixedStatusDates = this.fixedStatusDates(fixedInvalidNextCycleDates);
+
+    return fixedStatusDates;
+  };
+
   map = (jsonSheet: SheetHeaders[]): Subscription[] => {
     const subscriptions: Subscription[] = jsonSheet.map((headerField, i) => {
       return {
         index: i,
         chargeAmount: parseInt(headerField.quantidade_cobranças),
-        chargeFrequencyInDaysField: parseInt(headerField.cobrada_a_cada_X_dias),
+        chargeFrequencyInDays: parseInt(headerField.cobrada_a_cada_X_dias),
         startDate: new Date(headerField.data_início),
         status: this.statusMapper(headerField.status),
         statusDate: new Date(headerField.data_status),
@@ -66,6 +98,6 @@ export class SubscriptionMapper {
       };
     });
 
-    return this.fixInvalidDates(jsonSheet, subscriptions);
+    return this.treatData(jsonSheet, subscriptions);
   };
 }

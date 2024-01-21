@@ -35,15 +35,14 @@ export class CommonService {
 
     if (filterSubscriptionPlan === 'Monthly') {
       subscriptions = subscriptions.filter(
-        (s) => s.chargeFrequencyInDaysField === 30,
+        (s) => s.chargeFrequencyInDays === 30,
       );
     }
 
     if (filterSubscriptionPlan === 'Yearly') {
       subscriptions = subscriptions.filter(
         (s) =>
-          s.chargeFrequencyInDaysField === 365 ||
-          s.chargeFrequencyInDaysField === 360,
+          s.chargeFrequencyInDays === 365 || s.chargeFrequencyInDays === 360,
       );
     }
 
