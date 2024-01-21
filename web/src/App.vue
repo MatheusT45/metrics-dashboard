@@ -59,6 +59,9 @@ watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
         title="Metrics Dashboard"
         class="bg-purple-darken-4"
       ></v-toolbar>
+      <h1 v-if="!fileUploaded">Welcome!</h1>
+      <h2 v-if="!fileUploaded">Please, upload a CSV or XLSX file</h2>
+      <h2 v-if="!fileUploaded">using the button below</h2>
       <Upload v-if="!fileUploaded" @onUpload="onUpload" />
       <v-container v-if="!!fileUploaded" class="chart-container">
         <h1>Graphs</h1>
@@ -81,7 +84,7 @@ watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
             ></v-select>
             <v-select
               v-model="selectedPlanFilter"
-              label="Month"
+              label="Subscription Plan"
               :items="['All', 'Monthly', 'Yearly']"
               variant="outlined"
               class="options-select"
@@ -115,7 +118,7 @@ main {
 }
 
 h1 {
-  margin-bottom: 2rem;
+  margin: 2rem 0;
   text-align: center;
 }
 

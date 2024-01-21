@@ -2,7 +2,6 @@
 import { ref } from "vue";
 
 const isSelecting = ref(false);
-const file = ref(null);
 const uploader = ref<any>(null);
 
 const handleFileImport = () => {
