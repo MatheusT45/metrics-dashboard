@@ -66,15 +66,35 @@ export class SubscriptionMapper {
   };
 
   // Some Next Cycle dates are calculated wrong
-  fixNextCycleDates = (subscriptions: Subscription[]): Subscription[] => {
+  fixMonthlyNextCycleDates = (
+    subscriptions: Subscription[],
+  ): Subscription[] => {
     subscriptions.map((s) => {
       const fixedNextCycleDate = new Date(s.startDate);
       fixedNextCycleDate.setMonth(s.startDate.getMonth() + s.chargeAmount);
       if (
         s.chargeFrequencyInDays === 30 &&
-        s.status === 'Active' &&
         (fixedNextCycleDate.getMonth() != s.nextCycle.getMonth() ||
           fixedNextCycleDate.getFullYear() != s.nextCycle.getFullYear())
+      ) {
+        s.nextCycle = fixedNextCycleDate;
+        return s;
+      }
+      return s;
+    });
+    return subscriptions;
+  };
+
+  // Some Next Cycle dates are calculated wrong
+  fixYearlyNextCycleDates = (subscriptions: Subscription[]): Subscription[] => {
+    subscriptions.map((s) => {
+      const fixedNextCycleDate = new Date(s.startDate);
+      fixedNextCycleDate.setFullYear(
+        s.startDate.getFullYear() + s.chargeAmount,
+      );
+      if (
+        (s.chargeFrequencyInDays === 365 || s.chargeFrequencyInDays === 360) &&
+        fixedNextCycleDate.getFullYear() != s.nextCycle.getFullYear()
       ) {
         s.nextCycle = fixedNextCycleDate;
         return s;
@@ -94,9 +114,11 @@ export class SubscriptionMapper {
       subscriptions,
     );
     const fixedStatusDates = this.fixStatusDates(fixedInvalidNextCycleDates);
-    const fixedNextCycleDates = this.fixNextCycleDates(fixedStatusDates);
+    const fixedNextCycleDates = this.fixMonthlyNextCycleDates(fixedStatusDates);
+    const fixedYearlyNextCycleDates =
+      this.fixYearlyNextCycleDates(fixedNextCycleDates);
 
-    return fixedNextCycleDates;
+    return fixedYearlyNextCycleDates;
   };
 
   map = (jsonSheet: SheetHeaders[]): Subscription[] => {
