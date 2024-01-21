@@ -9,26 +9,39 @@ const recurringRevenueData = ref([]);
 const fileUploaded = ref<any>(null);
 const selectedYear = ref<number>(0);
 const selectedPlanFilter = ref<"All" | "Monthly" | "Yearly">("All");
+const tab = ref<string>("one");
 
 const chartKeys = ref(0);
 
 const onUpload = async (e: any): Promise<void> => {
   const uploadedFile = e.target.files[0];
 
-  churnRateData.value = await getChurnRate(uploadedFile, {});
-  recurringRevenueData.value = await getRecurringRevenue(uploadedFile, {});
+  churnRateData.value = await getChurnRate({}, uploadedFile);
+  recurringRevenueData.value = await getRecurringRevenue({}, uploadedFile);
   fileUploaded.value = uploadedFile;
 };
 
+const useTestFile = async () => {
+  churnRateData.value = await getChurnRate({});
+  recurringRevenueData.value = await getRecurringRevenue({});
+  fileUploaded.value = true;
+};
+
 watch(selectedYear, async (year) => {
-  const churnResponse = await getChurnRate(fileUploaded.value, {
-    year,
-    filterSubscriptionPlan: selectedPlanFilter.value,
-  });
-  const revenueResponse = await getRecurringRevenue(fileUploaded.value, {
-    year,
-    filterSubscriptionPlan: selectedPlanFilter.value,
-  });
+  const churnResponse = await getChurnRate(
+    {
+      year,
+      filterSubscriptionPlan: selectedPlanFilter.value,
+    },
+    fileUploaded.value
+  );
+  const revenueResponse = await getRecurringRevenue(
+    {
+      year,
+      filterSubscriptionPlan: selectedPlanFilter.value,
+    },
+    fileUploaded.value
+  );
 
   churnRateData.value = churnResponse;
   recurringRevenueData.value = revenueResponse;
@@ -36,14 +49,20 @@ watch(selectedYear, async (year) => {
 });
 
 watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
-  const churnResponse = await getChurnRate(fileUploaded.value, {
-    year: selectedYear.value,
-    filterSubscriptionPlan,
-  });
-  const revenueResponse = await getRecurringRevenue(fileUploaded.value, {
-    year: selectedYear.value,
-    filterSubscriptionPlan,
-  });
+  const churnResponse = await getChurnRate(
+    {
+      year: selectedYear.value,
+      filterSubscriptionPlan,
+    },
+    fileUploaded.value
+  );
+  const revenueResponse = await getRecurringRevenue(
+    {
+      year: selectedYear.value,
+      filterSubscriptionPlan,
+    },
+    fileUploaded.value
+  );
 
   churnRateData.value = churnResponse;
   recurringRevenueData.value = revenueResponse;
@@ -61,7 +80,11 @@ watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
       <h1 v-if="!fileUploaded">Welcome!</h1>
       <h3 v-if="!fileUploaded">Please, upload a CSV or XLSX file</h3>
       <h3 v-if="!fileUploaded">using the button below</h3>
-      <Upload v-if="!fileUploaded" @onUpload="onUpload" />
+      <Upload
+        v-if="!fileUploaded"
+        @onUpload="onUpload"
+        @onTestFileClick="useTestFile"
+      />
       <v-container v-if="!!fileUploaded" class="chart-container">
         <h1>Graphs</h1>
         <v-card variant="outlined" class="options-card">
@@ -91,16 +114,28 @@ watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
           </div>
         </v-card>
         <div class="charts">
-          <v-card variant="tonal" class="chart-card">
-            <h2>Churn Rate</h2>
-            <ChurnChart :churnRateData="churnRateData" :key="chartKeys" />
-          </v-card>
-          <v-card variant="tonal" class="chart-card">
-            <h2>Recurring Revenue</h2>
-            <RevenueChart
-              :recurringRevenueData="recurringRevenueData"
-              :key="chartKeys"
-            />
+          <v-card>
+            <v-tabs
+              v-model="tab"
+              bg-color="deep-purple-accent-4"
+              align-tabs="center"
+            >
+              <v-tab value="one">Churn Rate</v-tab>
+              <v-tab value="two">Recurring Revenue</v-tab>
+            </v-tabs>
+            <v-card-text class="chart-card">
+              <v-window v-model="tab">
+                <v-window-item value="one">
+                  <ChurnChart :churnRateData="churnRateData" :key="chartKeys" />
+                </v-window-item>
+                <v-window-item value="two">
+                  <RevenueChart
+                    :recurringRevenueData="recurringRevenueData"
+                    :key="chartKeys"
+                  />
+                </v-window-item>
+              </v-window>
+            </v-card-text>
           </v-card>
         </div>
       </v-container>
@@ -149,12 +184,11 @@ h1 {
   margin-top: 80px;
 }
 
-.chart-card {
-  margin-bottom: 80px;
-}
-
 h2 {
   text-align: center;
   margin: 1rem 0;
+}
+.chart-card {
+  background-color: #424242;
 }
 </style>
