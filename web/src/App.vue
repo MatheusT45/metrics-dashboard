@@ -55,7 +55,7 @@ watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
   <v-app class="bg-grey-darken-4">
     <v-main>
       <v-toolbar
-        title="Metrics Dashboard"
+        title="📈 Metrics Dashboard"
         class="bg-purple-darken-4"
       ></v-toolbar>
       <h1 v-if="!fileUploaded">Welcome!</h1>
