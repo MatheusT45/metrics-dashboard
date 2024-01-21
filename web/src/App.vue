@@ -1,71 +1,158 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { ref, watch } from "vue";
+import { getChurnRate, getRecurringRevenue } from "./services/metrics.service";
+import ChurnChart from "./components/charts/ChurnChart.vue";
+import RevenueChart from "./components/charts/RevenueChart.vue";
+
+const churnRateData = ref([]);
+const recurringRevenueData = ref([]);
+const fileUploaded = ref<any>(null);
+const selectedYear = ref<number>(0);
+const selectedPlanFilter = ref<"All" | "Monthly" | "Yearly">("All");
+
+const chartKeys = ref(0);
+
+const onUpload = async (e: any): Promise<void> => {
+  const uploadedFile = e.target.files[0];
+
+  churnRateData.value = await getChurnRate(uploadedFile, {});
+  recurringRevenueData.value = await getRecurringRevenue(uploadedFile, {});
+  fileUploaded.value = uploadedFile;
+};
+
+watch(selectedYear, async (year) => {
+  const churnResponse = await getChurnRate(fileUploaded.value, {
+    year,
+    filterSubscriptionPlan: selectedPlanFilter.value,
+  });
+  const revenueResponse = await getRecurringRevenue(fileUploaded.value, {
+    year,
+    filterSubscriptionPlan: selectedPlanFilter.value,
+  });
+
+  churnRateData.value = churnResponse;
+  recurringRevenueData.value = revenueResponse;
+  chartKeys.value += 1;
+});
+
+watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
+  const churnResponse = await getChurnRate(fileUploaded.value, {
+    year: selectedYear.value,
+    filterSubscriptionPlan,
+  });
+  const revenueResponse = await getRecurringRevenue(fileUploaded.value, {
+    year: selectedYear.value,
+    filterSubscriptionPlan,
+  });
+
+  churnRateData.value = churnResponse;
+  recurringRevenueData.value = revenueResponse;
+  chartKeys.value += 1;
+});
 </script>
 
 <template>
-  <RouterView />
+  <v-app class="bg-grey-darken-4">
+    <v-main>
+      <v-toolbar
+        border
+        title="Metrics Dashboard"
+        class="bg-purple-darken-4"
+      ></v-toolbar>
+      <Upload v-if="!fileUploaded" @onUpload="onUpload" />
+      <v-container v-if="!!fileUploaded" class="chart-container">
+        <h1>Graphs</h1>
+        <v-card variant="outlined" class="options-card">
+          <h2>Options</h2>
+          <div class="options">
+            <v-select
+              v-model="selectedYear"
+              label="Year"
+              :items="[
+                { text: 'All', value: 0 },
+                { text: '2022', value: 2022 },
+                { text: '2023', value: 2023 },
+                { text: '2024', value: 2024 },
+              ]"
+              item-title="text"
+              item-value="value"
+              variant="outlined"
+              class="options-select"
+            ></v-select>
+            <v-select
+              v-model="selectedPlanFilter"
+              label="Month"
+              :items="['All', 'Monthly', 'Yearly']"
+              variant="outlined"
+              class="options-select"
+            ></v-select>
+          </div>
+        </v-card>
+        <div class="charts">
+          <v-card variant="tonal" class="chart-card">
+            <h2>Churn Rate</h2>
+            <ChurnChart :churnRateData="churnRateData" :key="chartKeys" />
+          </v-card>
+          <v-card variant="tonal" class="chart-card">
+            <h2>Recurring Revenue</h2>
+            <RevenueChart
+              :recurringRevenueData="recurringRevenueData"
+              :key="chartKeys"
+            />
+          </v-card>
+        </div>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
+h1 {
+  margin-bottom: 2rem;
   text-align: center;
-  margin-top: 2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.options-card {
+  text-align: center;
+  width: 40%;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-nav a:first-of-type {
-  border: 0;
+.options-select {
+  margin: 0 1rem;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.charts {
+  width: 100%;
+  margin-top: 80px;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.chart-card {
+  margin-bottom: 80px;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+h2 {
+  text-align: center;
+  margin: 1rem 0;
 }
 </style>
