@@ -60,8 +60,8 @@ watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
         class="bg-purple-darken-4"
       ></v-toolbar>
       <h1 v-if="!fileUploaded">Welcome!</h1>
-      <h2 v-if="!fileUploaded">Please, upload a CSV or XLSX file</h2>
-      <h2 v-if="!fileUploaded">using the button below</h2>
+      <h3 v-if="!fileUploaded">Please, upload a CSV or XLSX file</h3>
+      <h3 v-if="!fileUploaded">using the button below</h3>
       <Upload v-if="!fileUploaded" @onUpload="onUpload" />
       <v-container v-if="!!fileUploaded" class="chart-container">
         <h1>Graphs</h1>
