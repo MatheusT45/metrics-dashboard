@@ -46,8 +46,8 @@ export class SubscriptionMapper {
     return subscriptions;
   };
 
-  // Some Next Cycle Dates are registered before the actual start date
-  fixedStatusDates = (subscriptions: Subscription[]): Subscription[] => {
+  // Some Status Dates are registered before the actual start date
+  fixStatusDates = (subscriptions: Subscription[]): Subscription[] => {
     subscriptions.map((s) => {
       const fixedStatusDate = new Date(s.startDate);
       fixedStatusDate.setMonth(s.startDate.getMonth() + s.chargeAmount - 1);
@@ -65,6 +65,25 @@ export class SubscriptionMapper {
     return subscriptions;
   };
 
+  // Some Next Cycle dates are calculated wrong
+  fixNextCycleDates = (subscriptions: Subscription[]): Subscription[] => {
+    subscriptions.map((s) => {
+      const fixedNextCycleDate = new Date(s.startDate);
+      fixedNextCycleDate.setMonth(s.startDate.getMonth() + s.chargeAmount);
+      if (
+        s.chargeFrequencyInDays === 30 &&
+        s.status === 'Active' &&
+        (fixedNextCycleDate.getMonth() != s.nextCycle.getMonth() ||
+          fixedNextCycleDate.getFullYear() != s.nextCycle.getFullYear())
+      ) {
+        s.nextCycle = fixedNextCycleDate;
+        return s;
+      }
+      return s;
+    });
+    return subscriptions;
+  };
+
   // Data treatment and validations
   treatData = (
     jsonSheet: SheetHeaders[],
@@ -74,9 +93,10 @@ export class SubscriptionMapper {
       jsonSheet,
       subscriptions,
     );
-    const fixedStatusDates = this.fixedStatusDates(fixedInvalidNextCycleDates);
+    const fixedStatusDates = this.fixStatusDates(fixedInvalidNextCycleDates);
+    const fixedNextCycleDates = this.fixNextCycleDates(fixedStatusDates);
 
-    return fixedStatusDates;
+    return fixedNextCycleDates;
   };
 
   map = (jsonSheet: SheetHeaders[]): Subscription[] => {
