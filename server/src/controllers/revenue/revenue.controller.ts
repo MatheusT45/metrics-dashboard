@@ -7,34 +7,36 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { loadFile } from 'src/helpers/file.helper';
-import { subscriptionMapper } from 'src/mappers/subscription.mapper';
 import { fileValidators } from '../../validators/file.validator';
-import {
-  getMonthlyRecurringRevenue,
-  getYearlyRecurringRevenue,
-} from 'src/calcs/revenue';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
+import { RevenueService } from 'src/services/revenue/revenue.service';
+import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 
 @Controller('recurring-revenue')
 export class RevenueController {
+  constructor(
+    private revenueService: RevenueService,
+    private subscriptionMapper: SubscriptionMapper,
+  ) {}
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @Body() body: BodyOptions,
     @UploadedFile(fileValidators) file: Express.Multer.File,
   ): any {
+    // TODO: change type any to RecurringRevenueResponse[] | RecurringRevenueResponse
     const options: Options = JSON.parse(body.options);
-    const fileContent = subscriptionMapper(loadFile(file));
+    const fileContent = this.subscriptionMapper.map(loadFile(file));
 
     if (options.month && options.year) {
-      return getMonthlyRecurringRevenue(
+      return this.revenueService.getMonthlyRecurringRevenue(
         fileContent,
         options.month - 1,
         options.year,
       );
     }
 
-    return getYearlyRecurringRevenue(
+    return this.revenueService.getYearlyRecurringRevenue(
       fileContent,
       options.year,
       options.filterSubscriptionPlan,

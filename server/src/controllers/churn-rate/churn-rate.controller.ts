@@ -6,15 +6,20 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { getMonthlyChurnRate, getYearlyChurnRate } from 'src/calcs/churn-rate';
 import { loadFile } from 'src/helpers/file.helper';
-import { subscriptionMapper } from 'src/mappers/subscription.mapper';
+import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { ChurnRateResponse } from 'src/models/responses.model';
+import { ChurnService } from 'src/services/churn/churn.service';
 import { fileValidators } from 'src/validators/file.validator';
 
 @Controller('churn-rate')
 export class ChurnRateController {
+  constructor(
+    private churnService: ChurnService,
+    private subscriptionMapper: SubscriptionMapper,
+  ) {}
+
   @Post('/')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
@@ -22,12 +27,16 @@ export class ChurnRateController {
     @UploadedFile(fileValidators) file: Express.Multer.File,
   ): ChurnRateResponse[] | ChurnRateResponse {
     const options: Options = JSON.parse(body.options);
-    const fileContent = subscriptionMapper(loadFile(file));
+    const fileContent = this.subscriptionMapper.map(loadFile(file));
 
     if (options.month && options.year) {
-      return getMonthlyChurnRate(fileContent, options.month - 1, options.year);
+      return this.churnService.getMonthlyChurnRate(
+        fileContent,
+        options.month - 1,
+        options.year,
+      );
     }
-    return getYearlyChurnRate(
+    return this.churnService.getYearlyChurnRate(
       fileContent,
       options.year,
       options.filterSubscriptionPlan,
