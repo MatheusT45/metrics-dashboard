@@ -13,6 +13,7 @@ export const loadFile = (file: Express.Multer.File): SheetHeaders[] => {
     return csvJSON(file.buffer.toString());
   }
 
+  // When using the test sheet
   if ((file as any).type === 'text/csv') {
     return csvJSON((file as any).arrayBuffer.toString());
   }

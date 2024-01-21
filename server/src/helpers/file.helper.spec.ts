@@ -7,10 +7,22 @@ jest.mock('src/helpers/json.helper', () => ({
 }));
 
 describe('File Helper', () => {
-  it('should be defined', () => {
-    expect(jest.isMockFunction(csvJSON)).toBeTruthy();
-    expect(jest.isMockFunction(xlsxJSON)).toBeTruthy();
+  it('should call csvJSON', () => {
     loadFile({ mimetype: 'text/csv', buffer: Buffer.from('') } as any);
+    expect(csvJSON).toHaveBeenCalled();
+  });
+
+  it('should call xlsxJSON', () => {
+    loadFile({
+      mimetype:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      buffer: Buffer.from(''),
+    } as any);
+    expect(xlsxJSON).toHaveBeenCalled();
+  });
+
+  it('should call csvJSON on test sheet', () => {
+    loadFile({ type: 'text/csv', buffer: Buffer.from('') } as any);
     expect(csvJSON).toHaveBeenCalled();
   });
 });
