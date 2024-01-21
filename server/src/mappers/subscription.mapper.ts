@@ -49,14 +49,15 @@ export class SubscriptionMapper {
   // Some Next Cycle Dates are registered before the actual start date
   fixedStatusDates = (subscriptions: Subscription[]): Subscription[] => {
     subscriptions.map((s) => {
-      const correctedStatusDate = new Date(s.startDate);
-      correctedStatusDate.setMonth(s.startDate.getMonth() + s.chargeAmount - 1);
+      const fixedStatusDate = new Date(s.startDate);
+      fixedStatusDate.setMonth(s.startDate.getMonth() + s.chargeAmount - 1);
       if (
         s.chargeFrequencyInDays === 30 &&
         s.status === 'Active' &&
-        (correctedStatusDate.getMonth() != s.statusDate.getMonth() ||
-          correctedStatusDate.getFullYear() != s.statusDate.getFullYear())
+        (fixedStatusDate.getMonth() != s.statusDate.getMonth() ||
+          fixedStatusDate.getFullYear() != s.statusDate.getFullYear())
       ) {
+        s.statusDate = fixedStatusDate;
         return s;
       }
       return s;
