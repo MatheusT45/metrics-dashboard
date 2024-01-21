@@ -40,6 +40,7 @@ export class ChurnRateController {
         options.year,
       );
     }
+
     return this.churnService.getYearlyChurnRate(
       fileContent,
       options.year,

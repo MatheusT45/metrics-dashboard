@@ -13,6 +13,18 @@ describe('RevenueController', () => {
   let controller: RevenueController;
   let revenueService: RevenueService;
 
+  const expectedResult = [
+    {
+      relatesTo: '01-2022',
+      monthlyRevenue: 100.0,
+    },
+  ];
+
+  const file: any = {
+    originalname: 'test-sheet.csv',
+    buffer: Buffer.from('test'),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RevenueController],
@@ -23,20 +35,31 @@ describe('RevenueController', () => {
     controller = module.get<RevenueController>(RevenueController);
   });
 
-  it('should be defined', () => {
-    const result = [
-      {
-        relatesTo: '01-2022',
-        monthlyRevenue: 100.0,
-      },
-    ];
-
-    expect(jest.isMockFunction(loadFile)).toBeTruthy();
+  it('should be call yearly function', () => {
     jest
       .spyOn(revenueService, 'getYearlyRecurringRevenue')
-      .mockImplementation(() => result);
+      .mockImplementation(() => expectedResult);
 
-    expect(revenueService.getYearlyRecurringRevenue([])).toBe(result);
-    expect(controller).toBeDefined();
+    expect(jest.isMockFunction(loadFile)).toBeTruthy();
+    expect(controller.uploadFile({ options: '{}' }, file)).toEqual(
+      expectedResult,
+    );
+    expect(revenueService.getYearlyRecurringRevenue([])).toBe(expectedResult);
+  });
+
+  it('should be call monthly function', () => {
+    jest
+      .spyOn(revenueService, 'getMonthlyRecurringRevenue')
+      .mockImplementation(() => expectedResult[0]);
+
+    const response = controller.uploadFile(
+      { options: JSON.stringify({ month: 1, year: 2022 }) },
+      file,
+    );
+    expect(jest.isMockFunction(loadFile)).toBeTruthy();
+    expect(response).toEqual(expectedResult[0]);
+    expect(revenueService.getMonthlyRecurringRevenue([], 0, 2022)).toBe(
+      expectedResult[0],
+    );
   });
 });
