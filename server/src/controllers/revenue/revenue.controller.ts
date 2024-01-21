@@ -1,3 +1,4 @@
+import { LocalFileData } from 'get-file-object-from-local-path';
 import {
   Body,
   Controller,
@@ -11,6 +12,7 @@ import { fileValidators } from '../../validators/file.validator';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { RevenueService } from 'src/services/revenue/revenue.service';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
+import { RecurringRevenueResponse } from 'src/models/responses.model';
 
 @Controller('recurring-revenue')
 export class RevenueController {
@@ -22,11 +24,13 @@ export class RevenueController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @Body() body: BodyOptions,
-    @UploadedFile(fileValidators) file: Express.Multer.File,
-  ): any {
-    // TODO: change type any to RecurringRevenueResponse[] | RecurringRevenueResponse
+    @UploadedFile(fileValidators) file?: Express.Multer.File,
+  ): RecurringRevenueResponse[] | RecurringRevenueResponse {
     const options: Options = JSON.parse(body.options);
-    const fileContent = this.subscriptionMapper.map(loadFile(file));
+
+    const testFile = new LocalFileData('src/assets/test-sheet.csv');
+
+    const fileContent = this.subscriptionMapper.map(loadFile(file || testFile));
 
     if (options.month && options.year) {
       return this.revenueService.getMonthlyRecurringRevenue(

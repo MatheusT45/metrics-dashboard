@@ -12,4 +12,5 @@ export const fileValidators = new ParseFilePipe({
         '^(text/csv|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet)',
     }),
   ],
+  fileIsRequired: false,
 });

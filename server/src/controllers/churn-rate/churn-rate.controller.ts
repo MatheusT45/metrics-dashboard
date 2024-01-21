@@ -12,6 +12,7 @@ import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { ChurnRateResponse } from 'src/models/responses.model';
 import { ChurnService } from 'src/services/churn/churn.service';
 import { fileValidators } from 'src/validators/file.validator';
+import { LocalFileData } from 'get-file-object-from-local-path';
 
 @Controller('churn-rate')
 export class ChurnRateController {
@@ -24,10 +25,13 @@ export class ChurnRateController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @Body() body: BodyOptions,
-    @UploadedFile(fileValidators) file: Express.Multer.File,
+    @UploadedFile(fileValidators) file?: Express.Multer.File,
   ): ChurnRateResponse[] | ChurnRateResponse {
     const options: Options = JSON.parse(body.options);
-    const fileContent = this.subscriptionMapper.map(loadFile(file));
+
+    const testFile = new LocalFileData('src/assets/test-sheet.csv');
+
+    const fileContent = this.subscriptionMapper.map(loadFile(file || testFile));
 
     if (options.month && options.year) {
       return this.churnService.getMonthlyChurnRate(

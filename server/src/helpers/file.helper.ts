@@ -12,4 +12,8 @@ export const loadFile = (file: Express.Multer.File): SheetHeaders[] => {
   if (file.mimetype === 'text/csv') {
     return csvJSON(file.buffer.toString());
   }
+
+  if ((file as any).type === 'text/csv') {
+    return csvJSON((file as any).arrayBuffer.toString());
+  }
 };
