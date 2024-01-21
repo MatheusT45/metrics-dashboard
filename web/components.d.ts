@@ -8,11 +8,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BarChart: typeof import('./src/components/charts/common/BarChart.vue')['default']
+    ChartOptions: typeof import('./src/components/ChartOptions.vue')['default']
+    ChartTabs: typeof import('./src/components/ChartTabs.vue')['default']
     ChurnChart: typeof import('./src/components/charts/ChurnChart.vue')['default']
     FilterOptions: typeof import('./src/components/FilterOptions.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RevenueChart: typeof import('./src/components/charts/RevenueChart.vue')['default']
     Upload: typeof import('./src/components/Upload.vue')['default']
+    UploadButton: typeof import('./src/components/UploadButton.vue')['default']
     UploadCard: typeof import('./src/components/UploadCard.vue')['default']
+    WelcomeMessage: typeof import('./src/components/WelcomeMessage.vue')['default']
   }
 }
