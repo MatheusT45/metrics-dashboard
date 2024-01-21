@@ -9,9 +9,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { getMonthlyChurnRate, getYearlyChurnRate } from 'src/calcs/churn-rate';
 import { loadFile } from 'src/helpers/file.helper';
 import { subscriptionMapper } from 'src/mappers/subscription.mapper';
-import { fileValidators } from '../app.controller';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { ChurnRateResponse } from 'src/models/responses.model';
+import { fileValidators } from 'src/validators/file.validator';
 
 @Controller('churn-rate')
 export class ChurnRateController {

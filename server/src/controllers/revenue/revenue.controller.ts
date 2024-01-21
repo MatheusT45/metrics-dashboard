@@ -8,7 +8,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { loadFile } from 'src/helpers/file.helper';
 import { subscriptionMapper } from 'src/mappers/subscription.mapper';
-import { fileValidators } from '../app.controller';
+import { fileValidators } from '../../validators/file.validator';
 import {
   getMonthlyRecurringRevenue,
   getYearlyRecurringRevenue,
