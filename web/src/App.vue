@@ -24,7 +24,7 @@ const onUpload = async (e: any): Promise<void> => {
 const useTestFile = async () => {
   churnRateData.value = await getChurnRate({});
   recurringRevenueData.value = await getRecurringRevenue({});
-  fileUploaded.value = true;
+  fileUploaded.value = {};
 };
 
 watch(selectedYear, async (year) => {
