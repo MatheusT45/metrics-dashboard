@@ -17,12 +17,13 @@ describe('JSON Helper', () => {
   it('when calling xlsxJSON, should return an object', () => {
     jest.spyOn(xlsx, 'parse').mockReturnValue([
       {
+        name: '',
         data: [
           ['data início', 'data fim', 'valor'],
           [new Date('2022-12-02'), new Date('2022-12-02'), '100.0'],
         ],
       },
-    ] as any);
+    ]);
 
     const response = xlsxJSON(
       Buffer.from(

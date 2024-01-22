@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommonService } from './common.service';
+import { Subscription } from 'src/models/subscription.model';
 
 describe('CommonService', () => {
   let service: CommonService;
@@ -34,7 +35,7 @@ describe('CommonService', () => {
       ];
 
       const result = service.sortSubscriptionsByMonth(
-        subscriptions as any,
+        subscriptions as Partial<Subscription[]>,
         0,
         2020,
       );
@@ -78,7 +79,7 @@ describe('CommonService', () => {
       });
 
       const result = service.callMonthlyCalculationsPerYear(
-        subscriptions as any,
+        subscriptions as Partial<Subscription[]>,
         2020,
         'Monthly',
         mockedCallbackFunction,
@@ -131,7 +132,7 @@ describe('CommonService', () => {
       });
 
       const result = service.callMonthlyCalculationsPerYear(
-        subscriptions as any,
+        subscriptions as Partial<Subscription[]>,
         2020,
         'Yearly',
         mockedCallbackFunction,
@@ -189,7 +190,7 @@ describe('CommonService', () => {
       });
 
       const result = service.callMonthlyCalculationsPerYear(
-        subscriptions as any,
+        subscriptions as Partial<Subscription[]>,
         null,
         'All',
         mockedCallbackFunction,

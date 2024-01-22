@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubscriptionMapper } from './subscription.mapper';
+import { SheetHeaders } from 'src/models/sheet.model';
+import { Subscription } from 'src/models/subscription.model';
 
 describe('SubscriptionMapper', () => {
   let mapper: SubscriptionMapper;
@@ -49,7 +51,10 @@ describe('SubscriptionMapper', () => {
       ];
 
       expect(
-        mapper.fixInvalidNextCycleDates(jsonSheet as any, subscriptions as any),
+        mapper.fixInvalidNextCycleDates(
+          jsonSheet as Partial<SheetHeaders[]>,
+          subscriptions as Partial<Subscription[]>,
+        ),
       ).toEqual([
         {
           index: 0,
@@ -76,7 +81,9 @@ describe('SubscriptionMapper', () => {
     });
 
     it('should fix the status dates when its after the fixed status date', () => {
-      expect(mapper.fixStatusDates(subscriptions as any)).toMatchObject([
+      expect(
+        mapper.fixStatusDates(subscriptions as Partial<Subscription[]>),
+      ).toMatchObject([
         {
           statusDate: new Date('2023-03-15'),
         },
@@ -90,7 +97,7 @@ describe('SubscriptionMapper', () => {
           chargeAmount: 5,
           statusDate: new Date('2023-01-13'),
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -105,7 +112,7 @@ describe('SubscriptionMapper', () => {
           ...subscriptions[0],
           chargeFrequencyInDays: 365,
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -120,7 +127,7 @@ describe('SubscriptionMapper', () => {
           ...subscriptions[0],
           status: 'Canceled',
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -148,7 +155,9 @@ describe('SubscriptionMapper', () => {
 
     it('should fix the nextCycle dates when its after the fixed nextCycle date', () => {
       expect(
-        mapper.fixMonthlyNextCycleDates(subscriptions as any),
+        mapper.fixMonthlyNextCycleDates(
+          subscriptions as Partial<Subscription[]>,
+        ),
       ).toMatchObject([
         {
           nextCycle: new Date('2023-03-15'),
@@ -163,7 +172,7 @@ describe('SubscriptionMapper', () => {
           chargeAmount: 5,
           nextCycle: new Date('2023-01-13'),
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -178,7 +187,7 @@ describe('SubscriptionMapper', () => {
           ...subscriptions[0],
           chargeFrequencyInDays: 365,
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -206,7 +215,9 @@ describe('SubscriptionMapper', () => {
 
     it('should fix the nextCycle dates when its after the fixed nextCycle date', () => {
       expect(
-        mapper.fixYearlyNextCycleDates(subscriptions as any),
+        mapper.fixYearlyNextCycleDates(
+          subscriptions as Partial<Subscription[]>,
+        ),
       ).toMatchObject([
         {
           nextCycle: new Date('2024-09-13'),
@@ -221,7 +232,7 @@ describe('SubscriptionMapper', () => {
           chargeAmount: 5,
           nextCycle: new Date('2023-01-13'),
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -236,7 +247,7 @@ describe('SubscriptionMapper', () => {
           ...subscriptions[0],
           chargeFrequencyInDays: 30,
         },
-      ] as any);
+      ] as Partial<Subscription[]>);
 
       expect(response).toMatchObject([
         {
@@ -301,7 +312,7 @@ describe('SubscriptionMapper', () => {
 
       jest
         .spyOn(mapper, 'treatData')
-        .mockImplementation(() => expectedResponse as any);
+        .mockImplementation(() => expectedResponse as Partial<Subscription[]>);
 
       const response = mapper.map(jsonSheet);
 
