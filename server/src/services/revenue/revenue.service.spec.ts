@@ -4,6 +4,7 @@ import { CommonService } from '../common/common.service';
 
 describe('RevenueService', () => {
   let service: RevenueService;
+  let commonService: CommonService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,9 +12,95 @@ describe('RevenueService', () => {
     }).compile();
 
     service = module.get<RevenueService>(RevenueService);
+    commonService = module.get<CommonService>(CommonService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('getYearlyRecurringRevenue', () => {
+    it('should return an array of RevenueResponse objects', () => {
+      jest
+        .spyOn(commonService, 'callMonthlyCalculationsPerYear')
+        .mockImplementation(() => []);
+      service.getYearlyRecurringRevenue([]);
+
+      expect(commonService.callMonthlyCalculationsPerYear).toHaveBeenCalled();
+    });
+  });
+
+  describe('getMonthlyRecurringRevenue', () => {
+    it('should count active subscriptions as revenue', () => {
+      jest
+        .spyOn(commonService, 'sortSubscriptionsByMonth')
+        .mockImplementation(() => [
+          {
+            index: 0,
+            chargeFrequencyInDays: 30,
+            status: 'Active',
+            startDate: new Date('2020-01-01 03:00:00'), // adjust to timezone
+            statusDate: new Date('2020-01-01 03:00:00'),
+            nextCycle: new Date('2020-01-31 03:00:00'),
+            cancellationDate: null,
+            chargeAmount: 1,
+            valueCharged: 100,
+            userId: 1,
+          },
+          {
+            index: 1,
+            chargeFrequencyInDays: 30,
+            status: 'Canceled', // should be skipped
+            startDate: new Date('2020-01-01 03:00:00'),
+            statusDate: new Date('2020-01-01 03:00:00'),
+            nextCycle: new Date('2020-01-31 03:00:00'),
+            cancellationDate: new Date('2020-01-12 03:00:00'),
+            chargeAmount: 1,
+            valueCharged: 100,
+            userId: 2,
+          },
+
+          {
+            index: 1,
+            chargeFrequencyInDays: 30,
+            status: 'Canceled', // should be counted
+            startDate: new Date('2020-01-01 03:00:00'),
+            statusDate: new Date('2020-03-01 03:00:00'),
+            nextCycle: new Date('2020-04-31 03:00:00'),
+            cancellationDate: new Date('2020-03-12 03:00:00'),
+            chargeAmount: 3,
+            valueCharged: 100,
+            userId: 2,
+          },
+          {
+            index: 2,
+            chargeFrequencyInDays: 30,
+            status: 'Late', // should be counted
+            startDate: new Date('2020-01-01 03:00:00'),
+            statusDate: new Date('2020-03-01 03:00:00'),
+            nextCycle: new Date('2020-04-31 03:00:00'),
+            cancellationDate: null,
+            chargeAmount: 3,
+            valueCharged: 100,
+            userId: 3,
+          },
+          {
+            index: 3,
+            chargeFrequencyInDays: 365,
+            status: 'Canceled', // should be counted
+            startDate: new Date('2020-01-01 03:00:00'),
+            statusDate: new Date('2020-01-01 03:00:00'),
+            nextCycle: new Date('2021-01-10 03:00:00'),
+            cancellationDate: null,
+            chargeAmount: 1,
+            valueCharged: 1000,
+            userId: 4,
+          },
+        ]);
+
+      const response = service.getMonthlyRecurringRevenue([], 0, 2020);
+
+      expect(commonService.sortSubscriptionsByMonth).toHaveBeenCalled();
+      expect(response).toEqual({
+        relatesTo: '01-2020',
+        monthlyRevenue: 1300,
+      });
+    });
   });
 });

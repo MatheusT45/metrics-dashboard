@@ -22,7 +22,7 @@ describe('File Helper', () => {
   });
 
   it('should call csvJSON on test sheet', () => {
-    loadFile({ type: 'text/csv', buffer: Buffer.from('') } as any);
+    loadFile({ type: 'text/csv', arrayBuffer: Buffer.from('') } as any);
     expect(csvJSON).toHaveBeenCalled();
   });
 });
