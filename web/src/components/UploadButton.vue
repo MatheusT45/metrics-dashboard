@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const uploader = ref<any>(null);
+const uploader = ref<HTMLElement | null>(null);
 
 const handleFileImport = () => {
-  uploader.value.click();
+  uploader?.value?.click();
 };
 </script>
 

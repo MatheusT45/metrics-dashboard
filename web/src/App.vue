@@ -2,21 +2,26 @@
 import { getChurnRate, getRecurringRevenue } from "./services/metrics.service";
 import ChurnChart from "./components/charts/ChurnChart.vue";
 import RevenueChart from "./components/charts/RevenueChart.vue";
+import {
+  ChurnRate,
+  RecurringRevenue,
+  SubscriptionPlanFilter,
+} from "./models/metrics.model";
 
 export default {
   data(): {
-    churnRateData: any[]; // TODO: remove any
-    recurringRevenueData: any[];
-    fileUploaded: any;
+    churnRateData: ChurnRate[];
+    recurringRevenueData: RecurringRevenue[];
+    fileUploaded?: File;
     selectedYear: number;
-    selectedPlanFilter: "All" | "Monthly" | "Yearly";
+    selectedPlanFilter: SubscriptionPlanFilter;
     tab: string;
     chartKeys: number;
   } {
     return {
       churnRateData: [],
       recurringRevenueData: [],
-      fileUploaded: null,
+      fileUploaded: undefined,
       selectedYear: 0,
       selectedPlanFilter: "All",
       tab: "one",
@@ -24,8 +29,8 @@ export default {
     };
   },
   methods: {
-    async onUpload(e: any): Promise<void> {
-      const uploadedFile = e.target.files[0];
+    async onUpload(e: Event): Promise<void> {
+      const uploadedFile = ((<HTMLInputElement>e.target).files || [])[0];
 
       this.churnRateData = await getChurnRate({}, uploadedFile);
       this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
@@ -34,7 +39,7 @@ export default {
     async useTestFile() {
       this.churnRateData = await getChurnRate({});
       this.recurringRevenueData = await getRecurringRevenue({});
-      this.fileUploaded = {};
+      this.fileUploaded = {} as File;
     },
   },
   watch: {

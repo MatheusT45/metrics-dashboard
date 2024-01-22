@@ -1,3 +1,5 @@
+import { ChurnRate, RecurringRevenue } from "@/models/metrics.model";
+
 const API = import.meta.env.VITE_METRICS_API_URL;
 
 export interface MetricOptions {
@@ -6,7 +8,10 @@ export interface MetricOptions {
   filterSubscriptionPlan?: "All" | "Monthly" | "Yearly";
 }
 
-export const getChurnRate = async (options: MetricOptions, file?: File) => {
+export const getChurnRate = async (
+  options: MetricOptions,
+  file?: File
+): Promise<ChurnRate[]> => {
   const formData = new FormData();
   if (file) {
     formData.append("file", file);
@@ -21,7 +26,7 @@ export const getChurnRate = async (options: MetricOptions, file?: File) => {
 export const getRecurringRevenue = async (
   options: MetricOptions,
   file?: File
-) => {
+): Promise<RecurringRevenue[]> => {
   const formData = new FormData();
   if (file) {
     formData.append("file", file);
