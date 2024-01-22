@@ -15,12 +15,6 @@ const chartData = {
       borderColor: "rgb(255, 99, 132)",
     },
     {
-      label: "Subscriptions",
-      data: churnRateData.value.map((item: any) => item.subscriptions),
-      backgroundColor: "rgba(54, 162, 235, 0.6)",
-      borderColor: "rgb(54, 162, 235)",
-    },
-    {
       label: "Lost Subscriptions",
       data: churnRateData.value.map((item: any) => item.lostSubscriptions),
       backgroundColor: "rgba(255, 159, 64, 0.6)",
@@ -31,6 +25,12 @@ const chartData = {
       data: churnRateData.value.map((item: any) => item.newSubscriptions),
       backgroundColor: "rgba(75, 192, 192, 0.6)",
       borderColor: "rgb(75, 192, 192)",
+    },
+    {
+      label: "Subscriptions",
+      data: churnRateData.value.map((item: any) => item.subscriptions),
+      backgroundColor: "rgba(54, 162, 235, 0.6)",
+      borderColor: "rgb(54, 162, 235)",
     },
   ],
 };

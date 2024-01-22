@@ -1,20 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const isSelecting = ref(false);
 const uploader = ref<any>(null);
 
 const handleFileImport = () => {
-  isSelecting.value = true;
-
-  window.addEventListener(
-    "focus",
-    () => {
-      isSelecting.value = false;
-    },
-    { once: true }
-  );
-
   uploader.value.click();
 };
 </script>
@@ -28,7 +17,7 @@ const handleFileImport = () => {
             ref="uploader"
             @change="$emit('onUpload', $event)"
             type="file"
-            id="upload-btn"
+            id="upload-input"
             hidden
           />
           <label class="upload-card" for="upload-btn">
@@ -37,6 +26,7 @@ const handleFileImport = () => {
               min-width="228"
               size="x-large"
               variant="flat"
+              id="file-upload-btn"
               @click="handleFileImport"
             >
               <v-icon icon="mdi-upload" size="large" start />
@@ -48,6 +38,7 @@ const handleFileImport = () => {
               min-width="228"
               size="x-large"
               variant="flat"
+              id="test-file-btn"
               @click="$emit('onTestFileClick', $event)"
             >
               <v-icon icon="mdi-file-document" size="large" start />

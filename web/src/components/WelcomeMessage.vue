@@ -1,3 +1,4 @@
+<script setup lang="ts"></script>
 <template>
   <h1>Welcome!</h1>
   <h3>Please, upload a CSV or XLSX file</h3>
