@@ -50,7 +50,7 @@ export class SubscriptionMapper {
   fixStatusDates = (subscriptions: Subscription[]): Subscription[] => {
     subscriptions.map((s) => {
       const fixedStatusDate = new Date(s.startDate);
-      fixedStatusDate.setMonth(s.startDate.getMonth() + s.chargeAmount - 1);
+      fixedStatusDate.setMonth(s.startDate.getMonth() + s.chargeAmount);
       if (
         s.chargeFrequencyInDays === 30 &&
         s.status === 'Active' &&

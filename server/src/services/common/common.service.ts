@@ -56,7 +56,6 @@ export class CommonService {
         years.push(i);
       }
     } else {
-      // TODO: remove else
       years.push(year);
     }
     const results = [];
