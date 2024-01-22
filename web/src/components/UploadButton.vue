@@ -42,7 +42,7 @@ const handleFileImport = () => {
               <v-icon icon="mdi-upload" size="large" start />
               Upload File
             </v-btn>
-
+            <p>OR</p>
             <v-btn
               color="secondary"
               min-width="228"
