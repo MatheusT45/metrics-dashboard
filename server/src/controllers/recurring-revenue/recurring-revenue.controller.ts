@@ -10,14 +10,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { loadFile } from 'src/helpers/file.helper';
 import { fileValidators } from '../../validators/file.validator';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
-import { RevenueService } from 'src/services/revenue/revenue.service';
+import { RecurringRevenueService } from 'src/services/recurring-revenue/recurring-revenue.service';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 import { RecurringRevenueResponse } from 'src/models/responses.model';
 
 @Controller('recurring-revenue')
-export class RevenueController {
+export class RecurringRevenueController {
   constructor(
-    private revenueService: RevenueService,
+    private recurringRevenueService: RecurringRevenueService,
     private subscriptionMapper: SubscriptionMapper,
   ) {}
   @Post('/')
@@ -33,14 +33,14 @@ export class RevenueController {
     const fileContent = this.subscriptionMapper.map(loadFile(file || testFile));
 
     if (options.month && options.year) {
-      return this.revenueService.getMonthlyRecurringRevenue(
+      return this.recurringRevenueService.getMonthlyRecurringRevenue(
         fileContent,
         options.month - 1,
         options.year,
       );
     }
 
-    return this.revenueService.getYearlyRecurringRevenue(
+    return this.recurringRevenueService.getYearlyRecurringRevenue(
       fileContent,
       options.year,
       options.filterSubscriptionPlan,

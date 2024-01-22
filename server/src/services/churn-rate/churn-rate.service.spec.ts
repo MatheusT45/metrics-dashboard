@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChurnService } from './churn.service';
+import { ChurnRateService } from './churn-rate.service';
 import { CommonService } from '../common/common.service';
 
-describe('ChurnService', () => {
-  let service: ChurnService;
+describe('ChurnRateService', () => {
+  let service: ChurnRateService;
   let commonService: CommonService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ChurnService, CommonService],
+      providers: [ChurnRateService, CommonService],
     }).compile();
 
-    service = module.get<ChurnService>(ChurnService);
+    service = module.get<ChurnRateService>(ChurnRateService);
     commonService = module.get<CommonService>(CommonService);
   });
 

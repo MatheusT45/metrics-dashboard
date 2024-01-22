@@ -6,7 +6,7 @@ import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 import { CommonService } from '../common/common.service';
 
 @Injectable()
-export class ChurnService {
+export class ChurnRateService {
   constructor(private commonService: CommonService) {}
 
   getYearlyChurnRate = (

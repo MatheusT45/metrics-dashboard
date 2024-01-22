@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ChurnRateController } from './churn-rate.controller';
-import { ChurnService } from 'src/services/churn/churn.service';
+import { ChurnRateService } from 'src/services/churn-rate/churn-rate.service';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 import { loadFile } from 'src/helpers/file.helper';
 import { CommonService } from 'src/services/common/common.service';
@@ -11,7 +11,7 @@ jest.mock('src/helpers/file.helper', () => ({
 
 describe('ChurnRateController', () => {
   let controller: ChurnRateController;
-  let churnService: ChurnService;
+  let churnRateService: ChurnRateService;
 
   const expectedResult = [
     {
@@ -31,28 +31,28 @@ describe('ChurnRateController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChurnRateController],
-      providers: [ChurnService, SubscriptionMapper, CommonService],
+      providers: [ChurnRateService, SubscriptionMapper, CommonService],
     }).compile();
 
-    churnService = module.get<ChurnService>(ChurnService);
+    churnRateService = module.get<ChurnRateService>(ChurnRateService);
     controller = module.get<ChurnRateController>(ChurnRateController);
   });
 
   it('should be call yearly function', () => {
     jest
-      .spyOn(churnService, 'getYearlyChurnRate')
+      .spyOn(churnRateService, 'getYearlyChurnRate')
       .mockImplementation(() => expectedResult);
 
     expect(jest.isMockFunction(loadFile)).toBeTruthy();
     expect(controller.uploadFile({ options: '{}' }, file)).toEqual(
       expectedResult,
     );
-    expect(churnService.getYearlyChurnRate([])).toBe(expectedResult);
+    expect(churnRateService.getYearlyChurnRate([])).toBe(expectedResult);
   });
 
   it('should be call monthly function', () => {
     jest
-      .spyOn(churnService, 'getMonthlyChurnRate')
+      .spyOn(churnRateService, 'getMonthlyChurnRate')
       .mockImplementation(() => expectedResult[0]);
 
     const response = controller.uploadFile(
@@ -61,7 +61,7 @@ describe('ChurnRateController', () => {
     );
     expect(jest.isMockFunction(loadFile)).toBeTruthy();
     expect(response).toEqual(expectedResult[0]);
-    expect(churnService.getMonthlyChurnRate([], 0, 2022)).toBe(
+    expect(churnRateService.getMonthlyChurnRate([], 0, 2022)).toBe(
       expectedResult[0],
     );
   });

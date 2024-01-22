@@ -7,7 +7,7 @@ import { RecurringRevenueResponse } from 'src/models/responses.model';
 import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 
 @Injectable()
-export class RevenueService {
+export class RecurringRevenueService {
   constructor(private commonService: CommonService) {}
 
   getYearlyRecurringRevenue = (

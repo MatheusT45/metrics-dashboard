@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RevenueController } from './revenue.controller';
-import { RevenueService } from 'src/services/revenue/revenue.service';
+import { RecurringRevenueController } from './recurring-revenue.controller';
+import { RecurringRevenueService } from 'src/services/recurring-revenue/recurring-revenue.service';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 import { loadFile } from 'src/helpers/file.helper';
 import { CommonService } from 'src/services/common/common.service';
@@ -9,9 +9,9 @@ jest.mock('src/helpers/file.helper', () => ({
   loadFile: jest.fn(() => []),
 }));
 
-describe('RevenueController', () => {
-  let controller: RevenueController;
-  let revenueService: RevenueService;
+describe('RecurringRevenueController', () => {
+  let controller: RecurringRevenueController;
+  let recurringRevenueService: RecurringRevenueService;
 
   const expectedResult = [
     {
@@ -27,29 +27,35 @@ describe('RevenueController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [RevenueController],
-      providers: [RevenueService, SubscriptionMapper, CommonService],
+      controllers: [RecurringRevenueController],
+      providers: [RecurringRevenueService, SubscriptionMapper, CommonService],
     }).compile();
 
-    revenueService = module.get<RevenueService>(RevenueService);
-    controller = module.get<RevenueController>(RevenueController);
+    recurringRevenueService = module.get<RecurringRevenueService>(
+      RecurringRevenueService,
+    );
+    controller = module.get<RecurringRevenueController>(
+      RecurringRevenueController,
+    );
   });
 
   it('should be call yearly function', () => {
     jest
-      .spyOn(revenueService, 'getYearlyRecurringRevenue')
+      .spyOn(recurringRevenueService, 'getYearlyRecurringRevenue')
       .mockImplementation(() => expectedResult);
 
     expect(jest.isMockFunction(loadFile)).toBeTruthy();
     expect(controller.uploadFile({ options: '{}' }, file)).toEqual(
       expectedResult,
     );
-    expect(revenueService.getYearlyRecurringRevenue([])).toBe(expectedResult);
+    expect(recurringRevenueService.getYearlyRecurringRevenue([])).toBe(
+      expectedResult,
+    );
   });
 
   it('should be call monthly function', () => {
     jest
-      .spyOn(revenueService, 'getMonthlyRecurringRevenue')
+      .spyOn(recurringRevenueService, 'getMonthlyRecurringRevenue')
       .mockImplementation(() => expectedResult[0]);
 
     const response = controller.uploadFile(
@@ -58,8 +64,8 @@ describe('RevenueController', () => {
     );
     expect(jest.isMockFunction(loadFile)).toBeTruthy();
     expect(response).toEqual(expectedResult[0]);
-    expect(revenueService.getMonthlyRecurringRevenue([], 0, 2022)).toBe(
-      expectedResult[0],
-    );
+    expect(
+      recurringRevenueService.getMonthlyRecurringRevenue([], 0, 2022),
+    ).toBe(expectedResult[0]);
   });
 });

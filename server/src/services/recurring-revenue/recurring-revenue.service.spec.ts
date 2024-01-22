@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RevenueService } from './revenue.service';
+import { RecurringRevenueService } from './recurring-revenue.service';
 import { CommonService } from '../common/common.service';
 
-describe('RevenueService', () => {
-  let service: RevenueService;
+describe('RecurringRevenueService', () => {
+  let service: RecurringRevenueService;
   let commonService: CommonService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RevenueService, CommonService],
+      providers: [RecurringRevenueService, CommonService],
     }).compile();
 
-    service = module.get<RevenueService>(RevenueService);
+    service = module.get<RecurringRevenueService>(RecurringRevenueService);
     commonService = module.get<CommonService>(CommonService);
   });
 

@@ -10,14 +10,14 @@ import { loadFile } from 'src/helpers/file.helper';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { ChurnRateResponse } from 'src/models/responses.model';
-import { ChurnService } from 'src/services/churn/churn.service';
+import { ChurnRateService } from 'src/services/churn-rate/churn-rate.service';
 import { fileValidators } from 'src/validators/file.validator';
 import { LocalFileData } from 'get-file-object-from-local-path';
 
 @Controller('churn-rate')
 export class ChurnRateController {
   constructor(
-    private churnService: ChurnService,
+    private churnRateService: ChurnRateService,
     private subscriptionMapper: SubscriptionMapper,
   ) {}
 
@@ -34,14 +34,14 @@ export class ChurnRateController {
     const fileContent = this.subscriptionMapper.map(loadFile(file || testFile));
 
     if (options.month && options.year) {
-      return this.churnService.getMonthlyChurnRate(
+      return this.churnRateService.getMonthlyChurnRate(
         fileContent,
         options.month - 1,
         options.year,
       );
     }
 
-    return this.churnService.getYearlyChurnRate(
+    return this.churnRateService.getYearlyChurnRate(
       fileContent,
       options.year,
       options.filterSubscriptionPlan,
