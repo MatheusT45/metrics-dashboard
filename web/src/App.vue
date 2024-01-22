@@ -1,73 +1,88 @@
-<script setup lang="ts">
-import { ref, watch } from "vue";
+<script lang="ts">
 import { getChurnRate, getRecurringRevenue } from "./services/metrics.service";
 import ChurnChart from "./components/charts/ChurnChart.vue";
 import RevenueChart from "./components/charts/RevenueChart.vue";
 
-const churnRateData = ref([]);
-const recurringRevenueData = ref([]);
-const fileUploaded = ref<any>(null);
-const selectedYear = ref<number>(0);
-const selectedPlanFilter = ref<"All" | "Monthly" | "Yearly">("All");
-const tab = ref<string>("one");
+export default {
+  data(): {
+    churnRateData: any[]; // TODO: remove any
+    recurringRevenueData: any[];
+    fileUploaded: any;
+    selectedYear: number;
+    selectedPlanFilter: "All" | "Monthly" | "Yearly";
+    tab: string;
+    chartKeys: number;
+  } {
+    return {
+      churnRateData: [],
+      recurringRevenueData: [],
+      fileUploaded: null,
+      selectedYear: 0,
+      selectedPlanFilter: "All",
+      tab: "one",
+      chartKeys: 0,
+    };
+  },
+  methods: {
+    async onUpload(e: any): Promise<void> {
+      const uploadedFile = e.target.files[0];
 
-const chartKeys = ref(0);
+      this.churnRateData = await getChurnRate({}, uploadedFile);
+      this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
+      this.fileUploaded = uploadedFile;
+    },
+    async useTestFile() {
+      this.churnRateData = await getChurnRate({});
+      this.recurringRevenueData = await getRecurringRevenue({});
+      this.fileUploaded = {};
+    },
+  },
+  watch: {
+    async selectedYear(year) {
+      const churnResponse = await getChurnRate(
+        {
+          year,
+          filterSubscriptionPlan: this.selectedPlanFilter,
+        },
+        this.fileUploaded
+      );
 
-const onUpload = async (e: any): Promise<void> => {
-  const uploadedFile = e.target.files[0];
+      const revenueResponse = await getRecurringRevenue(
+        {
+          year,
+          filterSubscriptionPlan: this.selectedPlanFilter,
+        },
+        this.fileUploaded
+      );
 
-  churnRateData.value = await getChurnRate({}, uploadedFile);
-  recurringRevenueData.value = await getRecurringRevenue({}, uploadedFile);
-  fileUploaded.value = uploadedFile;
+      this.churnRateData = churnResponse;
+      this.recurringRevenueData = revenueResponse;
+      this.chartKeys += 1;
+    },
+
+    async selectedPlanFilter(filterSubscriptionPlan) {
+      const churnResponse = await getChurnRate(
+        {
+          year: this.selectedYear,
+          filterSubscriptionPlan,
+        },
+        this.fileUploaded
+      );
+
+      const revenueResponse = await getRecurringRevenue(
+        {
+          year: this.selectedYear,
+          filterSubscriptionPlan,
+        },
+        this.fileUploaded
+      );
+
+      this.churnRateData = churnResponse;
+      this.recurringRevenueData = revenueResponse;
+      this.chartKeys += 1;
+    },
+  },
 };
-
-const useTestFile = async () => {
-  churnRateData.value = await getChurnRate({});
-  recurringRevenueData.value = await getRecurringRevenue({});
-  fileUploaded.value = {};
-};
-
-watch(selectedYear, async (year) => {
-  const churnResponse = await getChurnRate(
-    {
-      year,
-      filterSubscriptionPlan: selectedPlanFilter.value,
-    },
-    fileUploaded.value
-  );
-  const revenueResponse = await getRecurringRevenue(
-    {
-      year,
-      filterSubscriptionPlan: selectedPlanFilter.value,
-    },
-    fileUploaded.value
-  );
-
-  churnRateData.value = churnResponse;
-  recurringRevenueData.value = revenueResponse;
-  chartKeys.value += 1;
-});
-
-watch(selectedPlanFilter, async (filterSubscriptionPlan) => {
-  const churnResponse = await getChurnRate(
-    {
-      year: selectedYear.value,
-      filterSubscriptionPlan,
-    },
-    fileUploaded.value
-  );
-  const revenueResponse = await getRecurringRevenue(
-    {
-      year: selectedYear.value,
-      filterSubscriptionPlan,
-    },
-    fileUploaded.value
-  );
-
-  churnRateData.value = churnResponse;
-  recurringRevenueData.value = revenueResponse;
-  chartKeys.value += 1;
-});
 </script>
 
 <template>
