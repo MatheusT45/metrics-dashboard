@@ -3,6 +3,8 @@ const selectedYear = defineModel<number>("selectedYear");
 const selectedPlanFilter = defineModel<"All" | "Monthly" | "Yearly">(
   "selectedPlanFilter"
 );
+
+// TODO: ADD YEARS FROM 2022 TO 2024" FROM BACKEND
 </script>
 
 <template>
@@ -21,6 +23,7 @@ const selectedPlanFilter = defineModel<"All" | "Monthly" | "Yearly">(
       item-value="value"
       variant="outlined"
       class="options-select"
+      ref="year-select"
     ></v-select>
     <v-select
       v-model="selectedPlanFilter"
@@ -28,6 +31,7 @@ const selectedPlanFilter = defineModel<"All" | "Monthly" | "Yearly">(
       :items="['All', 'Monthly', 'Yearly']"
       variant="outlined"
       class="options-select"
+      ref="plan-select"
     ></v-select>
   </div>
 </template>
