@@ -8,7 +8,11 @@ const mockedFile = new File(["test"], "filename", { type: "text/html" });
 
 describe("MetricsService", () => {
   beforeEach(() => {
-    global.fetch = vi.fn().mockResolvedValue({ json: vi.fn() });
+    global.fetch = vi.fn().mockResolvedValue({
+      json: () => ({
+        data: [],
+      }),
+    });
     vi.spyOn(FormData.prototype, "append");
   });
 

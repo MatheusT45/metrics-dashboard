@@ -12,6 +12,7 @@ import {
 vi.mock("../../src/services/metrics.service", () => ({
   getChurnRate: vi.fn(() => []),
   getRecurringRevenue: vi.fn(() => []),
+  getLifetimeValue: vi.fn(() => []),
 }));
 
 const vuetify = createVuetify({
@@ -67,14 +68,14 @@ describe("App", () => {
           year: 2020,
           filterSubscriptionPlan: "All",
         },
-        null
+        undefined
       );
       expect(getRecurringRevenue).toHaveBeenCalledWith(
         {
           year: 2020,
           filterSubscriptionPlan: "All",
         },
-        null
+        undefined
       );
     });
   });
@@ -88,14 +89,14 @@ describe("App", () => {
           year: 0,
           filterSubscriptionPlan: "Monthly",
         },
-        null
+        undefined
       );
       expect(getRecurringRevenue).toHaveBeenCalledWith(
         {
           year: 0,
           filterSubscriptionPlan: "Monthly",
         },
-        null
+        undefined
       );
     });
   });
