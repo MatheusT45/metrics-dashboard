@@ -26,6 +26,12 @@ const firstYear = computed(() => filteredYears.value[1].value);
 
 onMounted(() => {
   selectedYear.value = firstYear.value;
+  filteredYears.value.map((y) => {
+    if (y.value !== firstYear.value) {
+      y.text = `${y.text} (Projected)`;
+      return y;
+    }
+  });
 });
 </script>
 
