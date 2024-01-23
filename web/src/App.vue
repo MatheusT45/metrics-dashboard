@@ -20,6 +20,7 @@ export default {
     lifetimeValueData: LifetimeValue[];
     fileUploaded?: File;
     selectedYear: number;
+    availableYears: { text: string; value: number }[];
     selectedPlanFilter: SubscriptionPlanFilter;
     tab: string;
     chartKeys: number;
@@ -30,6 +31,7 @@ export default {
       lifetimeValueData: [],
       fileUploaded: undefined,
       selectedYear: 0,
+      availableYears: [{ text: "All", value: 0 }],
       selectedPlanFilter: "All",
       tab: "one",
       chartKeys: 0,
@@ -42,12 +44,24 @@ export default {
       this.churnRateData = await getChurnRate({}, uploadedFile);
       this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
       this.lifetimeValueData = await getLifetimeValue({}, uploadedFile);
+
+      this.churnRateData.map((data) => {
+        const year = data.relatesTo.split("-")[1];
+        this.availableYears.push({ text: year, value: parseInt(year) });
+      });
+
       this.fileUploaded = uploadedFile;
     },
     async useTestFile() {
       this.churnRateData = await getChurnRate({});
       this.recurringRevenueData = await getRecurringRevenue({});
       this.lifetimeValueData = await getLifetimeValue({});
+
+      this.churnRateData.map((data) => {
+        const year = data.relatesTo.split("-")[1];
+        this.availableYears.push({ text: year, value: parseInt(year) });
+      });
+
       this.fileUploaded = {} as File;
     },
   },
@@ -129,6 +143,7 @@ export default {
         <h1>Graphs</h1>
         <v-card variant="outlined" class="options-card">
           <chart-options
+            :availableYears="availableYears"
             v-model:selectedYear="selectedYear"
             v-model:selectedPlanFilter="selectedPlanFilter"
           />

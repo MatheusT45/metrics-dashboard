@@ -1,10 +1,32 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { ref } from "vue";
+import { onMounted } from "vue";
+
 const selectedYear = defineModel<number>("selectedYear");
 const selectedPlanFilter = defineModel<"All" | "Monthly" | "Yearly">(
   "selectedPlanFilter"
 );
 
-// TODO: ADD YEARS FROM 2022 TO 2024" FROM BACKEND
+const props = defineProps(["availableYears"]);
+const availableYears = ref(props.availableYears);
+
+const filteredYears = ref<{ text: string; value: number }[]>([
+  { text: "All", value: 0 },
+]);
+
+availableYears.value.forEach((year: { text: string; value: number }) => {
+  if (filteredYears.value.find((y) => y.value === year.value)) {
+    return;
+  }
+  filteredYears.value.push(year);
+});
+
+const firstYear = computed(() => filteredYears.value[1].value);
+
+onMounted(() => {
+  selectedYear.value = firstYear.value;
+});
 </script>
 
 <template>
@@ -13,12 +35,7 @@ const selectedPlanFilter = defineModel<"All" | "Monthly" | "Yearly">(
     <v-select
       v-model="selectedYear"
       label="Year"
-      :items="[
-        { text: 'All', value: 0 },
-        { text: '2022', value: 2022 },
-        { text: '2023', value: 2023 },
-        { text: '2024', value: 2024 },
-      ]"
+      :items="filteredYears"
       item-title="text"
       item-value="value"
       variant="outlined"
