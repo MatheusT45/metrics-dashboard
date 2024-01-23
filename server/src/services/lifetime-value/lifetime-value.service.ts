@@ -38,15 +38,17 @@ export class LifetimeValueService {
       total.lifetimeValue += r.lifetimeValue;
     });
 
-    total.averageTicketValue = Math.round(
-      total.averageTicketValue / data.length,
+    total.averageTicketValue = parseFloat(
+      (total.averageTicketValue / data.length).toFixed(2),
     );
 
-    total.averageRetentionTime = Math.round(
-      total.averageRetentionTime / data.length,
+    total.averageRetentionTime = parseFloat(
+      (total.averageRetentionTime / data.length).toFixed(2),
     );
 
-    total.lifetimeValue = Math.round(total.lifetimeValue / data.length);
+    total.lifetimeValue = parseFloat(
+      (total.lifetimeValue / data.length).toFixed(2),
+    );
 
     return { data, total };
   };
