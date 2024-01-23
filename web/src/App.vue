@@ -17,24 +17,26 @@ export default {
   data(): {
     churnRateData: ChurnRate[];
     recurringRevenueData: RecurringRevenue[];
-    lifetimeValueData: LifetimeValue[];
+    lifetimeValueData: { data: LifetimeValue[]; total: LifetimeValue };
     fileUploaded?: File;
     selectedYear: number;
     availableYears: { text: string; value: number }[];
     selectedPlanFilter: SubscriptionPlanFilter;
     tab: string;
     chartKeys: number;
+    snackbar: boolean;
   } {
     return {
       churnRateData: [],
       recurringRevenueData: [],
-      lifetimeValueData: [],
+      lifetimeValueData: { data: [], total: {} as LifetimeValue },
       fileUploaded: undefined,
       selectedYear: 0,
       availableYears: [{ text: "All", value: 0 }],
       selectedPlanFilter: "All",
       tab: "one",
       chartKeys: 0,
+      snackbar: false,
     };
   },
   methods: {
@@ -44,6 +46,14 @@ export default {
       this.churnRateData = await getChurnRate({}, uploadedFile);
       this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
       this.lifetimeValueData = await getLifetimeValue({}, uploadedFile);
+
+      if (
+        !this.churnRateData ||
+        !this.recurringRevenueData ||
+        !this.lifetimeValueData
+      ) {
+        this.snackbar = true;
+      }
 
       this.churnRateData.map((data) => {
         const year = data.relatesTo.split("-")[1];
@@ -168,6 +178,15 @@ export default {
           </chart-tabs>
         </div>
       </v-container>
+      <v-snackbar v-model="snackbar">
+        The file could not be uploaded.
+
+        <template v-slot:actions>
+          <v-btn color="pink" variant="text" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
