@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import {
   getChurnRate,
+  getLifetimeValue,
   getRecurringRevenue,
 } from "../../../src/services/metrics.service";
 
@@ -40,6 +41,21 @@ describe("MetricsService", () => {
 
     test("calls fetch with files", () => {
       getRecurringRevenue({}, mockedFile);
+
+      expect(FormData.prototype.append).toHaveBeenCalled();
+      expect(global.fetch).toHaveBeenCalled();
+    });
+  });
+
+  describe("getLifetimeValue", () => {
+    test("calls fetch without files", () => {
+      getLifetimeValue({});
+
+      expect(global.fetch).toHaveBeenCalled();
+    });
+
+    test("calls fetch with files", () => {
+      getLifetimeValue({}, mockedFile);
 
       expect(FormData.prototype.append).toHaveBeenCalled();
       expect(global.fetch).toHaveBeenCalled();
