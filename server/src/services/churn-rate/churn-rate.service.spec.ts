@@ -19,10 +19,37 @@ describe('ChurnRateService', () => {
     it('should return an array of ChurnRateResponse objects', () => {
       jest
         .spyOn(commonService, 'callMonthlyCalculationsPerYear')
-        .mockImplementation(() => []);
-      service.getYearlyChurnRate([]);
+        .mockImplementation(() => [
+          {
+            relatesTo: '01-2020',
+            lostSubscriptions: 2,
+            subscriptions: 2,
+            newSubscriptions: 0,
+            churnRate: 100,
+          },
+        ]);
+
+      const response = service.getYearlyChurnRate([]);
 
       expect(commonService.callMonthlyCalculationsPerYear).toHaveBeenCalled();
+      expect(response).toEqual({
+        data: [
+          {
+            relatesTo: '01-2020',
+            lostSubscriptions: 2,
+            subscriptions: 2,
+            newSubscriptions: 0,
+            churnRate: 100,
+          },
+        ],
+        total: {
+          relatesTo: 'Total',
+          lostSubscriptions: 2,
+          subscriptions: 2,
+          newSubscriptions: 0,
+          churnRate: 100,
+        },
+      });
     });
   });
 

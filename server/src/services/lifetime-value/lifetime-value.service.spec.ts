@@ -1,50 +1,56 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RecurringRevenueService } from './recurring-revenue.service';
+import { LifetimeValueService } from './lifetime-value.service';
 import { CommonService } from '../common/common.service';
 
-describe('RecurringRevenueService', () => {
-  let service: RecurringRevenueService;
+describe('LifetimeValueService', () => {
+  let service: LifetimeValueService;
   let commonService: CommonService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RecurringRevenueService, CommonService],
+      providers: [LifetimeValueService, CommonService],
     }).compile();
 
-    service = module.get<RecurringRevenueService>(RecurringRevenueService);
+    service = module.get<LifetimeValueService>(LifetimeValueService);
     commonService = module.get<CommonService>(CommonService);
   });
 
-  describe('getYearlyRecurringRevenue', () => {
-    it('should return an array of RevenueResponse objects', () => {
+  describe('getYearlyLifetimeValue', () => {
+    it('should return an array of LifetimeResponse objects', () => {
       jest
         .spyOn(commonService, 'callMonthlyCalculationsPerYear')
         .mockImplementation(() => [
           {
             relatesTo: '01-2020',
-            revenue: 1300,
+            averageTicketValue: 100,
+            averageRetentionTime: 1,
+            lifetimeValue: 100,
           },
         ]);
 
-      const response = service.getYearlyRecurringRevenue([]);
+      const response = service.getYearlyLifetimeValue([]);
 
       expect(commonService.callMonthlyCalculationsPerYear).toHaveBeenCalled();
       expect(response).toEqual({
         data: [
           {
             relatesTo: '01-2020',
-            revenue: 1300,
+            averageTicketValue: 100,
+            averageRetentionTime: 1,
+            lifetimeValue: 100,
           },
         ],
         total: {
           relatesTo: 'Total',
-          revenue: 1300,
+          averageTicketValue: 100,
+          averageRetentionTime: 1,
+          lifetimeValue: 100,
         },
       });
     });
   });
 
-  describe('getMonthlyRecurringRevenue', () => {
+  describe('getMonthlyLifetimeValue', () => {
     it('should count active subscriptions as revenue', () => {
       jest
         .spyOn(commonService, 'sortSubscriptionsByMonth')
@@ -112,12 +118,14 @@ describe('RecurringRevenueService', () => {
           },
         ]);
 
-      const response = service.getMonthlyRecurringRevenue([], 0, 2020);
+      const response = service.getMonthlyLifetimeValue([], 0, 2020);
 
       expect(commonService.sortSubscriptionsByMonth).toHaveBeenCalled();
       expect(response).toEqual({
         relatesTo: '01-2020',
-        revenue: 1300,
+        averageTicketValue: 280,
+        averageRetentionTime: 1.8,
+        lifetimeValue: 504,
       });
     });
   });
