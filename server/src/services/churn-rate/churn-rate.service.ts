@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { toDoubleDigits } from 'src/helpers/numbers.helper';
-import { ChurnRateResponse } from 'src/models/responses.model';
+import { ChurnRateResponse, YearlyResponse } from 'src/models/responses.model';
 import { Subscription } from 'src/models/subscription.model';
 import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 import { CommonService } from '../common/common.service';
@@ -13,13 +13,32 @@ export class ChurnRateService {
     subscriptions: Subscription[],
     year?: number,
     filterSubscriptionPlan?: SubscriptionPlanFilter,
-  ): ChurnRateResponse[] => {
-    return this.commonService.callMonthlyCalculationsPerYear(
+  ): YearlyResponse => {
+    const data = this.commonService.callMonthlyCalculationsPerYear(
       subscriptions,
       year,
       filterSubscriptionPlan,
       this.getMonthlyChurnRate,
     );
+
+    const total: ChurnRateResponse = {
+      relatesTo: 'Total',
+      lostSubscriptions: 0,
+      subscriptions: 0,
+      newSubscriptions: 0,
+      churnRate: 0,
+    };
+
+    data.forEach((r) => {
+      total.subscriptions += r.subscriptions;
+      total.lostSubscriptions += r.lostSubscriptions;
+      total.newSubscriptions += r.newSubscriptions;
+      total.churnRate += r.churnRate;
+    });
+
+    total.churnRate = Math.round(total.churnRate / data.length);
+
+    return { data, total };
   };
 
   getMonthlyChurnRate = (

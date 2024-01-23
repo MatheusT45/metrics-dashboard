@@ -14,7 +14,7 @@ const chartData = {
     {
       label: "Recurring Revenue R$",
       data: recurringRevenueData.value.map(
-        (item: RecurringRevenue) => item.monthlyRevenue
+        (item: RecurringRevenue) => item.revenue
       ),
       backgroundColor: "rgba(75, 192, 192, 0.8)",
       borderColor: "rgb(75, 192, 192)",

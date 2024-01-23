@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { toDoubleDigits } from 'src/helpers/numbers.helper';
 import { Subscription } from '../../models/subscription.model';
 import { CommonService } from '../common/common.service';
-import { RecurringRevenueResponse } from 'src/models/responses.model';
+import {
+  RecurringRevenueResponse,
+  YearlyResponse,
+} from 'src/models/responses.model';
 import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 
 @Injectable()
@@ -14,13 +17,26 @@ export class RecurringRevenueService {
     subscriptions: Subscription[],
     year?: number,
     filterSubscriptionPlan?: SubscriptionPlanFilter,
-  ): RecurringRevenueResponse[] => {
-    return this.commonService.callMonthlyCalculationsPerYear(
+  ): YearlyResponse => {
+    const data = this.commonService.callMonthlyCalculationsPerYear(
       subscriptions,
       year,
       filterSubscriptionPlan,
       this.getMonthlyRecurringRevenue,
     );
+
+    const total: RecurringRevenueResponse = {
+      relatesTo: 'Total',
+      revenue: 0,
+    };
+
+    data.forEach((r) => {
+      total.revenue += r.revenue;
+    });
+
+    total.revenue = parseFloat(total.revenue.toFixed(2));
+
+    return { data, total };
   };
 
   getMonthlyRecurringRevenue = (
@@ -34,13 +50,13 @@ export class RecurringRevenueService {
       year,
     );
 
-    let monthlyRevenue = 0;
+    let revenue = 0;
     monthSubscriptions.map((s) => {
       if (
         s.chargeFrequencyInDays === 30 &&
         (s.status === 'Active' || s.status === 'Upgrade') // get active and upgrade customers
       ) {
-        return (monthlyRevenue += s.valueCharged);
+        return (revenue += s.valueCharged);
       }
 
       if (
@@ -49,7 +65,7 @@ export class RecurringRevenueService {
         s.statusDate.getMonth() > monthIndex &&
         s.statusDate.getFullYear() >= year
       ) {
-        return (monthlyRevenue += s.valueCharged);
+        return (revenue += s.valueCharged);
       }
 
       if (
@@ -60,7 +76,7 @@ export class RecurringRevenueService {
         s.cancellationDate.getMonth() > monthIndex &&
         s.cancellationDate.getFullYear() >= year
       ) {
-        return (monthlyRevenue += s.valueCharged);
+        return (revenue += s.valueCharged);
       }
 
       if (
@@ -68,13 +84,13 @@ export class RecurringRevenueService {
         s.startDate.getMonth() === monthIndex &&
         s.startDate.getFullYear() === year
       ) {
-        return (monthlyRevenue += s.valueCharged);
+        return (revenue += s.valueCharged);
       }
     });
 
     return {
       relatesTo: `${toDoubleDigits(monthIndex + 1)}-${year}`,
-      monthlyRevenue: parseFloat(monthlyRevenue.toFixed(2)),
+      revenue: parseFloat(revenue.toFixed(2)),
     };
   };
 }

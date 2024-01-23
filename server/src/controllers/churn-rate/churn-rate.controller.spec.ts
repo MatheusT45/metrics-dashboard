@@ -13,15 +13,24 @@ describe('ChurnRateController', () => {
   let controller: ChurnRateController;
   let churnRateService: ChurnRateService;
 
-  const expectedResult = [
-    {
-      relatesTo: '01-2022',
+  const expectedResult = {
+    data: [
+      {
+        relatesTo: '01-2022',
+        lostSubscriptions: 10,
+        subscriptions: 100,
+        newSubscriptions: 5,
+        churnRate: 10,
+      },
+    ],
+    total: {
+      relatesTo: 'Total',
       lostSubscriptions: 10,
       subscriptions: 100,
       newSubscriptions: 5,
       churnRate: 10,
     },
-  ];
+  };
 
   const file: any = {
     originalname: 'test-sheet.csv',

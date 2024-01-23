@@ -10,5 +10,5 @@ export type ChurnRate = {
 
 export type RecurringRevenue = {
   relatesTo: string;
-  monthlyRevenue: number;
+  revenue: number;
 };

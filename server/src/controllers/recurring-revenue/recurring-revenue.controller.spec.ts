@@ -13,13 +13,18 @@ describe('RecurringRevenueController', () => {
   let controller: RecurringRevenueController;
   let recurringRevenueService: RecurringRevenueService;
 
-  const expectedResult = [
-    {
-      relatesTo: '01-2022',
-      monthlyRevenue: 100.0,
+  const expectedResult = {
+    data: [
+      {
+        relatesTo: '01-2022',
+        revenue: 100.0,
+      },
+    ],
+    total: {
+      relatesTo: 'Total',
+      revenue: 100.0,
     },
-  ];
-
+  };
   const file: any = {
     originalname: 'test-sheet.csv',
     buffer: Buffer.from('test'),

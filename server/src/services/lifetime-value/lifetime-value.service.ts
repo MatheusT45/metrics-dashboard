@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { toDoubleDigits } from 'src/helpers/numbers.helper';
 import { Subscription } from '../../models/subscription.model';
 import { CommonService } from '../common/common.service';
-import { LifetimeValueResponse } from 'src/models/responses.model';
+import {
+  LifetimeValueResponse,
+  YearlyResponse,
+} from 'src/models/responses.model';
 import { SubscriptionPlanFilter } from 'src/models/metric-options.model';
 
 @Injectable()
@@ -14,13 +17,38 @@ export class LifetimeValueService {
     subscriptions: Subscription[],
     year?: number,
     filterSubscriptionPlan?: SubscriptionPlanFilter,
-  ): LifetimeValueResponse[] => {
-    return this.commonService.callMonthlyCalculationsPerYear(
+  ): YearlyResponse => {
+    const data = this.commonService.callMonthlyCalculationsPerYear(
       subscriptions,
       year,
       filterSubscriptionPlan,
       this.getMonthlyLifetimeValue,
     );
+
+    const total: LifetimeValueResponse = {
+      relatesTo: 'Total',
+      averageTicketValue: 0,
+      averageRetentionTime: 0,
+      lifetimeValue: 0,
+    };
+
+    data.forEach((r) => {
+      total.averageTicketValue += r.averageTicketValue;
+      total.averageRetentionTime += r.averageRetentionTime;
+      total.lifetimeValue += r.lifetimeValue;
+    });
+
+    total.averageTicketValue = Math.round(
+      total.averageTicketValue / data.length,
+    );
+
+    total.averageRetentionTime = Math.round(
+      total.averageRetentionTime / data.length,
+    );
+
+    total.lifetimeValue = Math.round(total.lifetimeValue / data.length);
+
+    return { data, total };
   };
 
   getMonthlyLifetimeValue = (
@@ -34,20 +62,18 @@ export class LifetimeValueService {
       year,
     );
 
-    let monthlyRevenue = 0;
+    let ticketValue = 0;
     let monthlyRetention = 0;
     monthSubscriptions.map((s) => {
       if (s.chargeFrequencyInDays === 30) {
         return (
-          (monthlyRevenue += s.valueCharged),
-          (monthlyRetention += s.chargeAmount)
+          (ticketValue += s.valueCharged), (monthlyRetention += s.chargeAmount)
         );
       }
 
       if (s.chargeFrequencyInDays === 360 || s.chargeFrequencyInDays === 365) {
         return (
-          (monthlyRevenue += s.valueCharged),
-          (monthlyRetention += s.chargeAmount)
+          (ticketValue += s.valueCharged), (monthlyRetention += s.chargeAmount)
         );
       }
     });
@@ -55,7 +81,7 @@ export class LifetimeValueService {
     return {
       relatesTo: `${toDoubleDigits(monthIndex + 1)}-${year}`,
       averageTicketValue: parseFloat(
-        (monthlyRevenue / monthSubscriptions.length).toFixed(2),
+        (ticketValue / monthSubscriptions.length).toFixed(2),
       ),
 
       averageRetentionTime: parseFloat(
@@ -64,7 +90,7 @@ export class LifetimeValueService {
 
       lifetimeValue: parseFloat(
         (
-          (monthlyRevenue / monthSubscriptions.length) *
+          (ticketValue / monthSubscriptions.length) *
           (monthlyRetention / monthSubscriptions.length)
         ).toFixed(2),
       ),

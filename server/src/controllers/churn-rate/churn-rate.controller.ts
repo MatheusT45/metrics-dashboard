@@ -9,7 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { loadFile } from 'src/helpers/file.helper';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
-import { ChurnRateResponse } from 'src/models/responses.model';
+import { ChurnRateResponse, YearlyResponse } from 'src/models/responses.model';
 import { ChurnRateService } from 'src/services/churn-rate/churn-rate.service';
 import { fileValidators } from 'src/validators/file.validator';
 import { LocalFileData } from 'get-file-object-from-local-path';
@@ -26,7 +26,7 @@ export class ChurnRateController {
   uploadFile(
     @Body() body: BodyOptions,
     @UploadedFile(fileValidators) file?: Express.Multer.File,
-  ): ChurnRateResponse[] | ChurnRateResponse {
+  ): YearlyResponse | ChurnRateResponse {
     const options: Options = JSON.parse(body.options);
 
     const testFile = new LocalFileData('src/assets/test-sheet.csv');

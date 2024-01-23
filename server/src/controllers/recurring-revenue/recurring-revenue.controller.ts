@@ -12,7 +12,10 @@ import { fileValidators } from '../../validators/file.validator';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { RecurringRevenueService } from 'src/services/recurring-revenue/recurring-revenue.service';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
-import { RecurringRevenueResponse } from 'src/models/responses.model';
+import {
+  RecurringRevenueResponse,
+  YearlyResponse,
+} from 'src/models/responses.model';
 
 @Controller('recurring-revenue')
 export class RecurringRevenueController {
@@ -25,7 +28,7 @@ export class RecurringRevenueController {
   uploadFile(
     @Body() body: BodyOptions,
     @UploadedFile(fileValidators) file?: Express.Multer.File,
-  ): RecurringRevenueResponse[] | RecurringRevenueResponse {
+  ): YearlyResponse | RecurringRevenueResponse {
     const options: Options = JSON.parse(body.options);
 
     const testFile = new LocalFileData('src/assets/test-sheet.csv');

@@ -12,7 +12,10 @@ import { fileValidators } from '../../validators/file.validator';
 import { BodyOptions, Options } from 'src/models/metric-options.model';
 import { LifetimeValueService } from 'src/services/lifetime-value/lifetime-value.service';
 import { SubscriptionMapper } from 'src/mappers/subscription.mapper';
-import { LifetimeValueResponse } from 'src/models/responses.model';
+import {
+  LifetimeValueResponse,
+  YearlyResponse,
+} from 'src/models/responses.model';
 
 @Controller('lifetime-value')
 export class LifetimeValueController {
@@ -25,7 +28,7 @@ export class LifetimeValueController {
   uploadFile(
     @Body() body: BodyOptions,
     @UploadedFile(fileValidators) file?: Express.Multer.File,
-  ): LifetimeValueResponse[] | LifetimeValueResponse {
+  ): YearlyResponse | LifetimeValueResponse {
     const options: Options = JSON.parse(body.options);
 
     const testFile = new LocalFileData('src/assets/test-sheet.csv');

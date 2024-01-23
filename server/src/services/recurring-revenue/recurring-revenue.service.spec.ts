@@ -99,7 +99,7 @@ describe('RecurringRevenueService', () => {
       expect(commonService.sortSubscriptionsByMonth).toHaveBeenCalled();
       expect(response).toEqual({
         relatesTo: '01-2020',
-        monthlyRevenue: 1300,
+        revenue: 1300,
       });
     });
   });

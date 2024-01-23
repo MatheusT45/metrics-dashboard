@@ -8,7 +8,7 @@ export type ChurnRateResponse = {
 
 export type RecurringRevenueResponse = {
   relatesTo: string;
-  monthlyRevenue: number;
+  revenue: number;
 };
 
 export type LifetimeValueResponse = {
@@ -16,4 +16,12 @@ export type LifetimeValueResponse = {
   averageTicketValue: number;
   averageRetentionTime: number;
   lifetimeValue: number;
+};
+
+export type YearlyResponse = {
+  data:
+    | ChurnRateResponse[]
+    | RecurringRevenueResponse[]
+    | LifetimeValueResponse[];
+  total: ChurnRateResponse | RecurringRevenueResponse | LifetimeValueResponse;
 };
