@@ -1,9 +1,14 @@
 <script lang="ts">
-import { getChurnRate, getRecurringRevenue } from "./services/metrics.service";
+import {
+  getChurnRate,
+  getLifetimeValue,
+  getRecurringRevenue,
+} from "./services/metrics.service";
 import ChurnChart from "./components/charts/ChurnChart.vue";
 import RevenueChart from "./components/charts/RevenueChart.vue";
 import {
   ChurnRate,
+  LifetimeValue,
   RecurringRevenue,
   SubscriptionPlanFilter,
 } from "./models/metrics.model";
@@ -12,6 +17,7 @@ export default {
   data(): {
     churnRateData: ChurnRate[];
     recurringRevenueData: RecurringRevenue[];
+    lifetimeValueData: LifetimeValue[];
     fileUploaded?: File;
     selectedYear: number;
     selectedPlanFilter: SubscriptionPlanFilter;
@@ -21,6 +27,7 @@ export default {
     return {
       churnRateData: [],
       recurringRevenueData: [],
+      lifetimeValueData: [],
       fileUploaded: undefined,
       selectedYear: 0,
       selectedPlanFilter: "All",
@@ -34,11 +41,13 @@ export default {
 
       this.churnRateData = await getChurnRate({}, uploadedFile);
       this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
+      this.lifetimeValueData = await getLifetimeValue({}, uploadedFile);
       this.fileUploaded = uploadedFile;
     },
     async useTestFile() {
       this.churnRateData = await getChurnRate({});
       this.recurringRevenueData = await getRecurringRevenue({});
+      this.lifetimeValueData = await getLifetimeValue({});
       this.fileUploaded = {} as File;
     },
   },
@@ -60,8 +69,17 @@ export default {
         this.fileUploaded
       );
 
+      const lifetimeResponse = await getLifetimeValue(
+        {
+          year,
+          filterSubscriptionPlan: this.selectedPlanFilter,
+        },
+        this.fileUploaded
+      );
+
       this.churnRateData = churnResponse;
       this.recurringRevenueData = revenueResponse;
+      this.lifetimeValueData = lifetimeResponse;
       this.chartKeys += 1;
     },
 
@@ -82,8 +100,17 @@ export default {
         this.fileUploaded
       );
 
+      const lifetimeResponse = await getLifetimeValue(
+        {
+          year: this.selectedYear,
+          filterSubscriptionPlan,
+        },
+        this.fileUploaded
+      );
+
       this.churnRateData = churnResponse;
       this.recurringRevenueData = revenueResponse;
+      this.lifetimeValueData = lifetimeResponse;
       this.chartKeys += 1;
     },
   },
@@ -109,11 +136,17 @@ export default {
         <div class="charts">
           <chart-tabs v-model:tab="tab">
             <template v-slot:churn-chart>
-              <ChurnChart :churnRateData="churnRateData" :key="chartKeys" />
+              <churn-chart :churnRateData="churnRateData" :key="chartKeys" />
             </template>
             <template v-slot:revenue-chart>
-              <RevenueChart
+              <revenue-chart
                 :recurringRevenueData="recurringRevenueData"
+                :key="chartKeys"
+              />
+            </template>
+            <template v-slot:lifetime-chart>
+              <lifetime-chart
+                :lifetimeValueData="lifetimeValueData"
                 :key="chartKeys"
               />
             </template>

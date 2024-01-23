@@ -7,6 +7,7 @@ const tab = defineModel<string>("one");
     <v-tabs v-model="tab" bg-color="deep-purple-accent-4" align-tabs="center">
       <v-tab value="one">Churn Rate</v-tab>
       <v-tab value="two">Recurring Revenue</v-tab>
+      <v-tab value="three">Lifetime Value</v-tab>
     </v-tabs>
     <v-card-text class="chart-card">
       <v-window v-model="tab">
@@ -15,6 +16,9 @@ const tab = defineModel<string>("one");
         </v-window-item>
         <v-window-item value="two">
           <slot name="revenue-chart"></slot>
+        </v-window-item>
+        <v-window-item value="three">
+          <slot name="lifetime-chart"></slot>
         </v-window-item>
       </v-window>
     </v-card-text>

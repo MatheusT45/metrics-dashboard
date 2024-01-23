@@ -12,3 +12,10 @@ export type RecurringRevenue = {
   relatesTo: string;
   revenue: number;
 };
+
+export type LifetimeValue = {
+  relatesTo: string;
+  averageTicketValue: number;
+  averageRetentionTime: number;
+  lifetimeValue: number;
+};

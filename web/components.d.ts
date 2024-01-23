@@ -13,6 +13,7 @@ declare module 'vue' {
     ChurnChart: typeof import('./src/components/charts/ChurnChart.vue')['default']
     FilterOptions: typeof import('./src/components/FilterOptions.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    LifetimeChart: typeof import('./src/components/charts/LifetimeChart.vue')['default']
     RevenueChart: typeof import('./src/components/charts/RevenueChart.vue')['default']
     Upload: typeof import('./src/components/Upload.vue')['default']
     UploadButton: typeof import('./src/components/UploadButton.vue')['default']
