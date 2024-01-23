@@ -24,7 +24,14 @@ const chartData = {
 </script>
 
 <template>
+  <h1>Recurring Revenue Chart</h1>
   <BarChart :data="chartData" />
 </template>
 
-<style scoped></style>
+<style scoped>
+h1 {
+  text-align: center;
+  margin: 1rem 0;
+  color: white;
+}
+</style>

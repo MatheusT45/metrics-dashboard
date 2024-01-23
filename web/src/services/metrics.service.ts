@@ -61,7 +61,7 @@ export const getRecurringRevenue = async (
 export const getLifetimeValue = async (
   options: MetricOptions,
   file?: File
-): Promise<LifetimeValue[]> => {
+): Promise<{ data: LifetimeValue[]; total: LifetimeValue }> => {
   const formData = new FormData();
 
   if (file) {
@@ -70,13 +70,12 @@ export const getLifetimeValue = async (
 
   formData.append("options", JSON.stringify(options));
 
-  const response = await (<Promise<{ data: LifetimeValue[] }>>fetch(
-    `${API}/lifetime-value`,
-    {
-      method: "POST",
-      body: formData,
-    }
-  ).then((response) => response.json()));
+  const response = await (<
+    Promise<{ data: LifetimeValue[]; total: LifetimeValue }>
+  >fetch(`${API}/lifetime-value`, {
+    method: "POST",
+    body: formData,
+  }).then((response) => response.json()));
 
-  return response.data;
+  return response;
 };

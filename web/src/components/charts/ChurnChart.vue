@@ -6,7 +6,7 @@ import { ChurnRate } from "@/models/metrics.model";
 const props = defineProps(["churnRateData"]);
 const churnRateData = ref(props.churnRateData);
 
-const chartData = {
+const churnData = {
   labels: churnRateData.value.map((item: ChurnRate) => item.relatesTo),
   datasets: [
     {
@@ -15,6 +15,12 @@ const chartData = {
       backgroundColor: "rgba(255, 99, 132, 0.6)",
       borderColor: "rgb(255, 99, 132)",
     },
+  ],
+};
+
+const chartData = {
+  labels: churnRateData.value.map((item: ChurnRate) => item.relatesTo),
+  datasets: [
     {
       label: "Lost Subscriptions",
       data: churnRateData.value.map(
@@ -40,5 +46,15 @@ const chartData = {
 </script>
 
 <template>
+  <h1>Churn Rate Chart</h1>
+  <BarChart :data="churnData" />
+  <h1>Subscriptions Chart</h1>
   <BarChart :data="chartData" />
 </template>
+<style scoped>
+h1 {
+  text-align: center;
+  margin: 1rem 0;
+  color: white;
+}
+</style>
