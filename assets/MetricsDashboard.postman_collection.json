@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "3b71feba-43e2-40c0-9941-9815be872600",
+		"name": "MetricsDashboard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32529925"
+	},
+	"item": [
+		{
+			"name": "ChurnRate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "options",
+							"value": "{\"year\": 2022}",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/dev/Github/metrics-dashboard/assets/modelo-teste-full-stack (2).xlsx",
+							"disabled": true
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/dev/Github/metrics-dashboard/assets/test-sheet-with-comma-value.csv",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/churn-rate",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"churn-rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RecurringRevenue",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "options",
+							"value": "{\"year\": 2022}",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/dev/Github/metrics-dashboard/assets/modelo-teste-full-stack (2).xlsx",
+							"disabled": true
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/dev/Github/metrics-dashboard/assets/test-sheet-with-comma-value.csv",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/recurring-revenue",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"recurring-revenue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LifetimeValue",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "options",
+							"value": "{\"year\": 2022}",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/dev/Github/metrics-dashboard/assets/modelo-teste-full-stack (2).xlsx",
+							"disabled": true
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/dev/Github/metrics-dashboard/assets/test-sheet-with-comma-value.csv",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/lifetime-value",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"lifetime-value"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
