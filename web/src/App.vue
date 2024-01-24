@@ -13,6 +13,7 @@ import {
   SubscriptionPlanFilter,
 } from "./models/metrics.model";
 
+  // Options based component
 export default {
   data(): {
     churnRateData: ChurnRate[];
