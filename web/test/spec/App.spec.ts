@@ -42,7 +42,6 @@ describe("App", () => {
   });
 
   test("displays app name", () => {
-    // Assert the rendered text of the component
     expect(wrapper.text()).toContain("Metrics Dashboard");
   });
 

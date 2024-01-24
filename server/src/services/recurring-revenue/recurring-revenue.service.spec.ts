@@ -53,7 +53,7 @@ describe('RecurringRevenueService', () => {
             index: 0,
             chargeFrequencyInDays: 30,
             status: 'Active',
-            startDate: new Date('2020-01-01 00:00:00'), // adjust to timezone
+            startDate: new Date('2020-01-01 00:00:00'),
             statusDate: new Date('2020-01-01 00:00:00'),
             nextCycle: new Date('2020-01-31 00:00:00'),
             cancellationDate: null,

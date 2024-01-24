@@ -35,7 +35,6 @@ describe("ChartOptions", () => {
       }
     );
 
-    // Assert the rendered text of the component
     expect(wrapper.text()).toContain("Options");
   });
 

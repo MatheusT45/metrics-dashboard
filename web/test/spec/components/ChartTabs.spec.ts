@@ -28,6 +28,5 @@ test("displays message", () => {
     }
   );
 
-  // Assert the rendered text of the component
   expect(wrapper.text()).toContain("Churn RateRecurring Revenue");
 });
