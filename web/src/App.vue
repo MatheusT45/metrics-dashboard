@@ -43,24 +43,24 @@ export default {
     async onUpload(e: Event): Promise<void> {
       const uploadedFile = ((<HTMLInputElement>e.target).files || [])[0];
 
-      this.churnRateData = await getChurnRate({}, uploadedFile);
-      this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
-      this.lifetimeValueData = await getLifetimeValue({}, uploadedFile);
+      try {
+        this.churnRateData = await getChurnRate({}, uploadedFile);
+        this.recurringRevenueData = await getRecurringRevenue({}, uploadedFile);
+        this.lifetimeValueData = await getLifetimeValue({}, uploadedFile);
 
-      if (
-        !this.churnRateData ||
-        !this.recurringRevenueData ||
-        !this.lifetimeValueData
-      ) {
+        if (!this.churnRateData) {
+          this.snackbar = true;
+        }
+
+        this.churnRateData.map((data) => {
+          const year = data.relatesTo.split("-")[1];
+          this.availableYears.push({ text: year, value: parseInt(year) });
+        });
+
+        this.fileUploaded = uploadedFile;
+      } catch (error) {
         this.snackbar = true;
       }
-
-      this.churnRateData.map((data) => {
-        const year = data.relatesTo.split("-")[1];
-        this.availableYears.push({ text: year, value: parseInt(year) });
-      });
-
-      this.fileUploaded = uploadedFile;
     },
     async useTestFile() {
       this.churnRateData = await getChurnRate({});

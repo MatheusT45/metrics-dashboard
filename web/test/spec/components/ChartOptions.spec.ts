@@ -20,7 +20,12 @@ describe("ChartOptions", () => {
         template: "<chart-options />",
       },
       {
-        props: {},
+        props: {
+          availableYears: [
+            { text: "2022", value: 2022 },
+            { text: "2023", value: 2023 },
+          ],
+        },
         global: {
           components: {
             ChartOptions,
@@ -36,13 +41,25 @@ describe("ChartOptions", () => {
 
   test("change props with select input change", async () => {
     const wrapper = mount(ChartOptions, {
-      props: { selectedYear: 0, selectedPlanFilter: "All" },
+      props: {
+        selectedYear: 0,
+        selectedPlanFilter: "All",
+        availableYears: [
+          { text: "2022", value: 2022 },
+          { text: "2022", value: 2022 },
+          { text: "2023", value: 2023 },
+          { text: "2023", value: 2023 },
+          { text: "2023", value: 2023 },
+          { text: "2023", value: 2023 },
+          { text: "2024", value: 2024 },
+        ],
+      },
       global: {
         plugins: [vuetify],
       },
     });
 
-    expect(wrapper.vm.selectedYear).toEqual(0);
+    expect(wrapper.vm.selectedYear).toEqual(2022);
     expect(wrapper.vm.selectedPlanFilter).toEqual("All");
 
     const yearSelect = wrapper.findComponent({ ref: "year-select" });
@@ -51,10 +68,10 @@ describe("ChartOptions", () => {
     expect(yearSelect.exists()).toBeTruthy();
     expect(planSelect.exists()).toBeTruthy();
 
-    yearSelect.setValue(2022);
+    yearSelect.setValue(2023);
     planSelect.setValue("Monthly");
 
-    expect(wrapper.vm.selectedYear).toEqual(2022);
+    expect(wrapper.vm.selectedYear).toEqual(2023);
     expect(wrapper.vm.selectedPlanFilter).toEqual("Monthly");
   });
 });
