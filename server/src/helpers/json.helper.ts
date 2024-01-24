@@ -41,8 +41,6 @@ export function xlsxJSON(file: Buffer): SheetHeaders[] {
         value[j] = value[j].toString().replace('.', ',');
       }
       if (typeof value[j] === 'object') {
-        value[j].setHours(value[j].getHours() + 3); // Fix timezone
-
         const formattedDate = `${value[j].getMonth() + 1}/${value[j].getDate()}/${value[j].getFullYear()} ${value[j].getHours()}:${value[j].getMinutes()}`;
         value[j] = formattedDate;
       }

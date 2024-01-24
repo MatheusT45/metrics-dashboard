@@ -58,7 +58,7 @@ describe('SubscriptionMapper', () => {
       ).toEqual([
         {
           index: 0,
-          nextCycle: new Date('2023-06-30T03:00:00.000Z'),
+          nextCycle: new Date('2023-06-30T00:00:00.000Z'),
         },
       ]);
     });
