@@ -112,7 +112,7 @@ Caso o arquivo não seja enviado, é utilizada uma cópia do csv provido no desa
 
 Há um arquivo documentando as requisições para a API em formato json exportado do postman, pode ser encontrado aqui: https://github.com/MatheusT45/metrics-dashboard/blob/main/assets/MetricsDashboard.postman_collection.json
 
-### Sobre os dados
+## Sobre os dados
 Identifiquei alguns erros na planilha e vou utilizar essa seção também para documentar minhas tomadas de decisão sobre a tratativa dos dados para justificar alguns trechos de código que escrevi para corrigí-los.
 
 - Notei que as datas de `próximo ciclo`, `data de status` estavam inconsistentes e em formatos errados também ( as vezes `dd/mm/yyyy` outras `mm/dd/yyyy`)
@@ -136,12 +136,12 @@ Mapeamento dos campos:
 - nextCycle: Data final do período de utilização
 - userId: id do usuário
 
-### Pontos futuros
+## Pontos futuros
 
 - Criar uma tela em que o usuário consiga enviar uma planilha com qualquer estrutura e que seja possível mapear os campos necessários para realizar os cálculos por essa tela. Assim esse projeto interpretaria qualquer estrutura de tabela para gerar os gráficos.
 
 
 
-### Considerações finais
+## Considerações finais
 
 Gostaria de agradecer a oportunidade de fazer esse desafio, aprendi muito durante a criação dele.
