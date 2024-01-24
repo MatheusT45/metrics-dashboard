@@ -1,6 +1,6 @@
 # metrics-dashboard
 
-Esse foi o resultado de um desafio para implementar gráficos de métricas chaves de negócio. As métricas que utilizei foram Churn Rate, MRR (Monthly Recurring Revenue) e LTV (Lifetime Value). A planilha usada para teste pode ser encontrada aqui: https://github.com/MatheusT45/metrics-dashboard/blob/main/assets/modelo-teste-full-stack.xlsx
+Esse foi o resultado de um desafio para implementar gráficos de métricas chaves de negócio para a empresa **Copybase**. As métricas que utilizei foram Churn Rate, MRR (Monthly Recurring Revenue) e LTV (Lifetime Value). A planilha usada para teste pode ser encontrada aqui: https://github.com/MatheusT45/metrics-dashboard/blob/main/assets/modelo-teste-full-stack.xlsx
 
 Utilizei Typescript no projeto todo, Nestjs no backend e Vuejs (Vuetify) no frontend.
 
@@ -139,3 +139,9 @@ Mapeamento dos campos:
 ### Pontos futuros
 
 - Criar uma tela em que o usuário consiga enviar uma planilha com qualquer estrutura e que seja possível mapear os campos necessários para realizar os cálculos por essa tela. Assim esse projeto interpretaria qualquer estrutura de tabela para gerar os gráficos.
+
+
+
+### Considerações finais
+
+Gostaria de agradecer a oportunidade de fazer esse desafio, aprendi muito durante a criação dele.
