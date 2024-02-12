@@ -1,4 +1,4 @@
-# metrics-dashboard
+# Metrics Dashboard
 
 Esse foi o resultado de um desafio para implementar gráficos de métricas chaves de negócio para a empresa **Copybase**. As métricas que utilizei foram Churn Rate, MRR (Monthly Recurring Revenue) e LTV (Lifetime Value). A planilha usada para teste pode ser encontrada aqui: https://github.com/MatheusT45/metrics-dashboard/blob/main/assets/modelo-teste-full-stack.xlsx
 
