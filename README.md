@@ -2,7 +2,7 @@
 
 Esse foi o resultado de um desafio para implementar gráficos de métricas chaves de negócio para a empresa **Copybase**. As métricas que utilizei foram Churn Rate, MRR (Monthly Recurring Revenue) e LTV (Lifetime Value). A planilha usada para teste pode ser encontrada aqui: https://github.com/MatheusT45/metrics-dashboard/blob/main/assets/modelo-teste-full-stack.xlsx
 
-Utilizei Typescript no projeto todo, Nestjs no backend e Vuejs (Vuetify) no frontend.
+Utilizei Typescript no projeto todo, Nestjs no backend e Vue3 (Vuetify) no frontend.
 
 Realizei testes unitários para as duas aplicações.
 
